@@ -493,7 +493,7 @@
 // ═══════════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwdQeL8RnBY75iOquxomIEjstlmI-OSGD8VVkeqjpuKotYMLZFAJFerYnb9fxJud2CP/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyr2_dPenygVM2qZHIbxS8Bac3RfzYiUEf4XveyXQGYSRq21kPjs8-BwMbQIhXzwrQH/exec';
 
 // ═══════════════════════════════════════════════════════════
 // PASSAGE DATA
@@ -756,46 +756,42 @@ function showScreen(id) {
 // ═══════════════════════════════════════════════════════════
 // LOGIN
 // ═══════════════════════════════════════════════════════════
+function fetchJsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = "cb_" + Math.random().toString(36).slice(2);
+    const s = document.createElement("script");
+    const t = setTimeout(() => { delete window[cb]; document.body.removeChild(s); reject(new Error("timeout")); }, 10000);
+    window[cb] = (d) => { clearTimeout(t); delete window[cb]; document.body.removeChild(s); resolve(d); };
+    s.src = url + "&callback=" + cb;
+    s.onerror = () => { clearTimeout(t); reject(new Error("error")); };
+    document.body.appendChild(s);
+  });
+}
+
 async function handleLogin() {
-  const pid = document.getElementById('pid-input').value.trim().toUpperCase();
-  const errEl = document.getElementById('login-error');
-  errEl.style.display = 'none';
-
-  if (!pid) { errEl.textContent = 'Please enter your Participant ID.'; errEl.style.display = 'block'; return; }
-
-  const btn = document.querySelector('#screen-login .btn-primary');
+  const pid = document.getElementById("pid-input").value.trim().toUpperCase();
+  const errEl = document.getElementById("login-error");
+  errEl.style.display = "none";
+  if (!pid) { errEl.textContent = "Please enter your Participant ID."; errEl.style.display = "block"; return; }
+  const btn = document.querySelector("#screen-login .btn-primary");
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Looking you up...';
-
   try {
-    const res = await fetch(`${SHEET_URL}?participantId=${pid}`);
-    const data = await res.json();
-
+    const data = await fetchJsonp(SHEET_URL + "?participantId=" + pid);
     if (data.error) {
-      errEl.textContent = 'Participant ID not found. Please check and try again.';
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.innerHTML = 'Continue →';
-      return;
+      errEl.textContent = "Participant ID not found. Please check and try again.";
+      errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
     }
-
     participantId = pid;
-    // filter to only passages we have data for
     assignedPassages = data.passages.filter(p => PASSAGES[p]);
     if (assignedPassages.length === 0) {
-      errEl.textContent = 'No passages found for your ID. Please contact the researcher.';
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.innerHTML = 'Continue →';
-      return;
+      errEl.textContent = "No passages assigned yet. Please contact the researcher.";
+      errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
     }
-
-    showScreen('screen-instructions');
-  } catch (e) {
-    errEl.textContent = 'Connection error. Please check your internet and try again.';
-    errEl.style.display = 'block';
-    btn.disabled = false;
-    btn.innerHTML = 'Continue →';
+    showScreen("screen-instructions");
+  } catch(e) {
+    errEl.textContent = "Connection error. Please check your internet and try again.";
+    errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →";
   }
 }
 
