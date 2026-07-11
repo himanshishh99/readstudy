@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reading Study — ACM IGDTUW</title>
+<script src="https://webgazer.cs.brown.edu/webgazer.js" async></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -744,6 +745,49 @@ let gazeData = {};
 let readingStartTime = null;
 let allResponses = [];
 
+// ── WebGazer state ──
+let gazePoints = [];
+let gazeInterval = null;
+let webgazerReady = false;
+
+// ── WebGazer helpers ──
+function startGazeTracking(passageId) {
+  gazePoints = [];
+  if (!webgazerReady) return;
+  gazeInterval = setInterval(() => {
+    const pred = webgazer.getCurrentPrediction();
+    if (pred) gazePoints.push({ x: pred.x, y: pred.y, t: Date.now() });
+  }, 100);
+}
+
+function stopGazeTracking(passageId) {
+  if (gazeInterval) { clearInterval(gazeInterval); gazeInterval = null; }
+  if (gazePoints.length === 0) {
+    gazeData[passageId] = { fixationDuration: 0, regressionCount: 0, readingSpeed: 0 };
+    return;
+  }
+
+  // fixation duration: average time between gaze points (proxy for dwell time)
+  const totalDuration = (gazePoints[gazePoints.length-1].t - gazePoints[0].t) / 1000;
+  const wordCount = PASSAGES[passageId] ? PASSAGES[passageId].text.split(' ').length : 200;
+  const fixDur = parseFloat((totalDuration / gazePoints.length * 1000).toFixed(1));
+
+  // regression count: count how many times x-position moves significantly leftward
+  let regressions = 0;
+  for (let i = 1; i < gazePoints.length; i++) {
+    if (gazePoints[i].x < gazePoints[i-1].x - 50) regressions++;
+  }
+
+  // reading speed: words per minute
+  const speed = totalDuration > 0 ? Math.round(wordCount / (totalDuration / 60)) : 0;
+
+  gazeData[passageId] = {
+    fixationDuration: fixDur,
+    regressionCount: regressions,
+    readingSpeed: speed
+  };
+}
+
 // ═══════════════════════════════════════════════════════════
 // SCREEN HELPERS
 // ═══════════════════════════════════════════════════════════
@@ -810,6 +854,17 @@ function startCalibration() {
   grid.innerHTML = '';
   calibClicked = 0;
 
+  // init webgazer
+  if (typeof webgazer !== 'undefined') {
+    webgazer.setGazeListener(() => {}).begin().then(() => {
+      webgazer.showVideoPreview(true).showPredictionPoints(false).applyKalmanFilter(true);
+      webgazerReady = true;
+    }).catch(err => {
+      console.warn('WebGazer init failed:', err);
+      webgazerReady = false;
+    });
+  }
+
   for (let i = 0; i < 9; i++) {
     const dot = document.createElement('div');
     dot.className = 'calib-dot';
@@ -833,6 +888,10 @@ function startCalibration() {
 // READING
 // ═══════════════════════════════════════════════════════════
 function startStudy() {
+  // hide webgazer video box during actual study
+  if (typeof webgazer !== 'undefined') {
+    webgazer.showVideoPreview(false).showPredictionPoints(false);
+  }
   currentPassageIndex = 0;
   showPassage();
 }
@@ -852,17 +911,21 @@ function showPassage() {
   gazeData[pid] = { fixationDuration: 0, regressionCount: 0, readingSpeed: 0 };
 
   showScreen('screen-reading');
+  setTimeout(() => startGazeTracking(pid), 500);
 }
 
 function doneReading() {
   const pid = assignedPassages[currentPassageIndex];
-  const elapsed = (Date.now() - readingStartTime) / 1000;
-  const wordCount = PASSAGES[pid].text.split(' ').length;
+  stopGazeTracking(pid);
 
-  // approximate metrics from timing
-  gazeData[pid].readingSpeed = Math.round(wordCount / (elapsed / 60));
-  gazeData[pid].fixationDuration = parseFloat((elapsed / wordCount * 1000).toFixed(1));
-  gazeData[pid].regressionCount = Math.max(0, Math.round((elapsed - (wordCount / 200 * 60)) * 0.5));
+  // fallback: if webgazer didn't work, approximate from timing
+  if (gazeData[pid].readingSpeed === 0) {
+    const elapsed = (Date.now() - readingStartTime) / 1000;
+    const wordCount = PASSAGES[pid].text.split(' ').length;
+    gazeData[pid].readingSpeed = Math.round(wordCount / (elapsed / 60));
+    gazeData[pid].fixationDuration = parseFloat((elapsed / wordCount * 1000).toFixed(1));
+    gazeData[pid].regressionCount = Math.max(0, Math.round((elapsed - (wordCount / 200 * 60)) * 0.5));
+  }
 
   showQuiz();
 }
