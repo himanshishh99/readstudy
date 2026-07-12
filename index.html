@@ -7,382 +7,65 @@
 <script src="https://webgazer.cs.brown.edu/webgazer.js" async></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
-    --text: #1A1A1A;
-    --subtext: #6B6B6B;
-    --accent: #2D5BE3;
-    --accent-light: #EEF2FF;
-    --border: #E5E5E5;
-    --success: #16A34A;
-    --radius: 12px;
+    --bg: #FAFAF8; --surface: #FFFFFF; --text: #1A1A1A; --subtext: #6B6B6B;
+    --accent: #2D5BE3; --accent-light: #EEF2FF; --border: #E5E5E5;
+    --success: #16A34A; --radius: 12px;
     --font-body: 'Georgia', 'Times New Roman', serif;
     --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-ui);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-
-  .screen {
-    display: none;
-    width: 100%;
-    max-width: 720px;
-    margin: 0 auto;
-    animation: fadeIn 0.3s ease;
-  }
-
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .screen { display: none; width: 100%; max-width: 720px; margin: 0 auto; animation: fadeIn 0.3s ease; }
   .screen.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── card ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 48px;
-  }
-
-  /* ── header ── */
-  .study-label {
-    font-family: var(--font-ui);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-
-  h1 {
-    font-family: var(--font-body);
-    font-size: 32px;
-    font-weight: normal;
-    line-height: 1.3;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-
-  h2 {
-    font-family: var(--font-body);
-    font-size: 24px;
-    font-weight: normal;
-    color: var(--text);
-    margin-bottom: 16px;
-  }
-
-  p {
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--subtext);
-    margin-bottom: 16px;
-  }
-
-  /* ── input ── */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; }
+  .study-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  h1 { font-family: var(--font-body); font-size: 32px; font-weight: normal; line-height: 1.3; color: var(--text); margin-bottom: 12px; }
+  h2 { font-family: var(--font-body); font-size: 24px; font-weight: normal; color: var(--text); margin-bottom: 16px; }
+  p { font-size: 15px; line-height: 1.7; color: var(--subtext); margin-bottom: 16px; }
   .input-group { margin: 28px 0; }
-
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  input[type="text"] {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 16px;
-    font-family: var(--font-ui);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+  input[type="text"] { width: 100%; padding: 12px 16px; font-size: 16px; font-family: var(--font-ui); border: 1.5px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.2s; }
   input[type="text"]:focus { border-color: var(--accent); }
-
-  /* ── buttons ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 28px;
-    font-size: 15px;
-    font-weight: 500;
-    font-family: var(--font-ui);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
-
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; font-size: 15px; font-weight: 500; font-family: var(--font-ui); border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
   .btn-primary:hover { background: #1e4bc7; }
   .btn-primary:disabled { background: #93A8F0; cursor: not-allowed; }
-
-  .btn-secondary {
-    background: var(--bg);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-  }
-
-  .btn-secondary:hover { background: var(--border); }
-
-  /* ── progress ── */
-  .progress-bar-wrap {
-    background: var(--border);
-    border-radius: 999px;
-    height: 4px;
-    margin-bottom: 32px;
-    overflow: hidden;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 999px;
-    transition: width 0.4s ease;
-  }
-
-  .progress-label {
-    font-size: 12px;
-    color: var(--subtext);
-    margin-bottom: 8px;
-    text-align: right;
-  }
-
-  /* ── passage ── */
-  .passage-topic {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-
-  .passage-text {
-    font-family: var(--font-body);
-    font-size: 18px;
-    line-height: 1.85;
-    color: var(--text);
-    padding: 32px;
-    background: var(--bg);
-    border-radius: var(--radius);
-    border-left: 3px solid var(--accent);
-    margin-bottom: 28px;
-    user-select: none;
-  }
-
-  .reading-note {
-    font-size: 13px;
-    color: var(--subtext);
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  /* ── quiz ── */
-  .quiz-q {
-    margin-bottom: 28px;
-    padding: 24px;
-    background: var(--bg);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-  }
-
-  .quiz-q-text {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-
-  .quiz-option {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1.5px solid var(--border);
-    background: var(--surface);
-    transition: all 0.15s;
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.5;
-  }
-
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
+  .progress-bar-wrap { background: var(--border); border-radius: 999px; height: 4px; margin-bottom: 32px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s ease; }
+  .progress-label { font-size: 12px; color: var(--subtext); margin-bottom: 8px; text-align: right; }
+  .passage-topic { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+  .passage-text { font-family: var(--font-body); font-size: 18px; line-height: 1.85; color: var(--text); padding: 32px; background: var(--bg); border-radius: var(--radius); border-left: 3px solid var(--accent); margin-bottom: 28px; user-select: none; }
+  .reading-note { font-size: 13px; color: var(--subtext); text-align: center; margin-bottom: 24px; }
+  .quiz-q { margin-bottom: 28px; padding: 24px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+  .quiz-q-text { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 16px; line-height: 1.5; }
+  .quiz-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); transition: all 0.15s; font-size: 14px; color: var(--text); line-height: 1.5; }
   .quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
   .quiz-option.selected { border-color: var(--accent); background: var(--accent-light); }
-
   .quiz-option input[type="radio"] { margin-top: 2px; accent-color: var(--accent); }
-
-  textarea {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-family: var(--font-ui);
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface);
-    color: var(--text);
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-    transition: border-color 0.2s;
-    line-height: 1.6;
-  }
-
+  textarea { width: 100%; padding: 12px 16px; font-size: 14px; font-family: var(--font-ui); border: 1.5px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); resize: vertical; min-height: 80px; outline: none; transition: border-color 0.2s; line-height: 1.6; }
   textarea:focus { border-color: var(--accent); }
-
-  /* ── instructions list ── */
-  .instruction-list {
-    list-style: none;
-    margin: 20px 0 28px;
-  }
-
-  .instruction-list li {
-    display: flex;
-    gap: 12px;
-    font-size: 14px;
-    color: var(--subtext);
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-
-  .instruction-list .num {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  /* ── divider ── */
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 28px 0;
-  }
-
-  /* ── thank you ── */
-  .checkmark {
-    width: 56px;
-    height: 56px;
-    background: #DCFCE7;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 24px;
-    font-size: 24px;
-  }
-
-  /* ── error ── */
-  .error-msg {
-    color: #DC2626;
-    font-size: 13px;
-    margin-top: 8px;
-    display: none;
-  }
-
-  /* ── loading ── */
-  .loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--subtext);
-    font-size: 14px;
-  }
-
-  .spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
+  .instruction-list { list-style: none; margin: 20px 0 28px; }
+  .instruction-list li { display: flex; gap: 12px; font-size: 14px; color: var(--subtext); margin-bottom: 12px; line-height: 1.6; }
+  .instruction-list .num { flex-shrink: 0; width: 24px; height: 24px; background: var(--accent-light); color: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+  .checkmark { width: 56px; height: 56px; background: #DCFCE7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 24px; }
+  .error-msg { color: #DC2626; font-size: 13px; margin-top: 8px; display: none; }
+  .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── calibration ── */
-  .calib-dot {
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    animation: pulse 1.5s infinite;
-  }
-
+  .calib-dot { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; cursor: pointer; transition: transform 0.2s, background 0.2s; animation: pulse 1.5s infinite; }
   .calib-dot:hover { transform: scale(1.3); background: var(--success); }
   .calib-dot.done { background: var(--success); animation: none; }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-  }
-
-  .calib-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin: 32px 0;
-    padding: 32px;
-    background: var(--bg);
-    border-radius: var(--radius);
-    justify-items: center;
-    align-items: center;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 600px) {
-    .card { padding: 28px 20px; }
-    h1 { font-size: 24px; }
-    .passage-text { font-size: 16px; padding: 20px; }
-  }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+  .calib-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin: 32px 0; padding: 32px; background: var(--bg); border-radius: var(--radius); justify-items: center; align-items: center; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  @media (max-width: 600px) { .card { padding: 28px 20px; } h1 { font-size: 24px; } .passage-text { font-size: 16px; padding: 20px; } }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 1: LOGIN
-══════════════════════════════════════════════ -->
+<!-- LOGIN -->
 <div class="screen active" id="screen-login">
   <div class="card">
     <div class="study-label">ACM IGDTUW — Reading Study</div>
@@ -394,24 +77,20 @@
       <input type="text" id="pid-input" placeholder="e.g. P001" autocomplete="off" />
       <div class="error-msg" id="login-error">Participant ID not found. Please check and try again.</div>
     </div>
-    <button class="btn btn-primary" onclick="handleLogin()">
-      Continue →
-    </button>
+    <button class="btn btn-primary" onclick="handleLogin()">Continue →</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 2: INSTRUCTIONS
-══════════════════════════════════════════════ -->
+<!-- INSTRUCTIONS -->
 <div class="screen" id="screen-instructions">
   <div class="card">
     <div class="study-label">Before You Begin</div>
     <h1>How This Works</h1>
-    <p>You'll read 6 short passages (about 200 words each) and answer a few questions after each one. The whole thing takes about 10–15 minutes.</p>
+    <p>You will read 6 short passages (about 200 words each) and answer a few questions after each one. The whole thing takes about 10 to 15 minutes.</p>
     <ul class="instruction-list">
-      <li><span class="num">1</span><span>We'll ask permission to use your webcam to track your eye movements while you read. This helps us understand reading behaviour — no video is recorded.</span></li>
-      <li><span class="num">2</span><span>You'll do a quick calibration — just click 9 dots on screen. Takes about 1 minute.</span></li>
-      <li><span class="num">3</span><span>Read each passage at your natural pace. There's no time limit. Click "Done Reading" when you finish.</span></li>
+      <li><span class="num">1</span><span>We will ask permission to use your webcam to track your eye movements while you read. No video is recorded — only gaze coordinates.</span></li>
+      <li><span class="num">2</span><span>You will do a quick calibration — just click 9 dots on screen. Takes about 1 minute.</span></li>
+      <li><span class="num">3</span><span>Read each passage at your natural pace. There is no time limit. Click Done Reading when you finish.</span></li>
       <li><span class="num">4</span><span>Answer 5 short questions about each passage. Be honest — there are no right or wrong answers beyond what the text says.</span></li>
       <li><span class="num">5</span><span>Sit in a well-lit room, keep your head relatively still, and make sure your face is visible to the webcam.</span></li>
     </ul>
@@ -421,17 +100,13 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 3: CALIBRATION
-══════════════════════════════════════════════ -->
+<!-- CALIBRATION -->
 <div class="screen" id="screen-calibration">
   <div class="card">
     <div class="study-label">Step 1 of 3 — Calibration</div>
     <h2>Click each dot to calibrate</h2>
-    <p>Click all 9 dots one by one. Look directly at each dot as you click it. This helps the eye tracker understand your gaze.</p>
-    <div class="calib-grid" id="calib-grid">
-      <!-- 9 dots injected by JS -->
-    </div>
+    <p>Click all 9 dots one by one. Look directly at each dot as you click it.</p>
+    <div class="calib-grid" id="calib-grid"></div>
     <p id="calib-status" style="text-align:center; font-size:14px; color:var(--subtext);">0 of 9 dots clicked</p>
     <div style="text-align:center; margin-top:16px;">
       <button class="btn btn-primary" id="calib-next-btn" onclick="startStudy()" disabled>Begin Reading →</button>
@@ -439,76 +114,83 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 4: READING
-══════════════════════════════════════════════ -->
+<!-- READING -->
 <div class="screen" id="screen-reading">
   <div class="card">
     <div class="progress-label" id="reading-progress-label">Passage 1 of 6</div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="reading-progress-bar" style="width:0%"></div>
-    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="reading-progress-bar" style="width:0%"></div></div>
     <div class="passage-topic" id="passage-topic"></div>
     <div class="passage-text" id="passage-text"></div>
-    <p class="reading-note">Read at your own pace. Click when you're done.</p>
+    <p class="reading-note">Read at your own pace. Click when you are done.</p>
     <div style="text-align:center;">
       <button class="btn btn-primary" onclick="doneReading()">Done Reading →</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 5: QUIZ
-══════════════════════════════════════════════ -->
+<!-- QUIZ -->
 <div class="screen" id="screen-quiz">
   <div class="card">
     <div class="progress-label" id="quiz-progress-label">Questions for Passage 1 of 6</div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="quiz-progress-bar" style="width:0%"></div>
-    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quiz-progress-bar" style="width:0%"></div></div>
     <h2>Quick Questions</h2>
-    <p>Answer based on what you just read. There are no right or wrong answers beyond what the passage said.</p>
+    <p>Answer based on what you just read.</p>
     <div id="quiz-questions"></div>
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="submitQuiz()">Submit & Continue →</button>
+      <button class="btn btn-primary" id="quiz-submit-btn" onclick="submitQuiz()">Submit and Continue →</button>
     </div>
-    <div class="error-msg" id="quiz-error" style="display:block; margin-top:12px;"></div>
+    <p id="quiz-error" style="color:#DC2626; font-size:13px; margin-top:12px;"></p>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     SCREEN 6: THANK YOU
-══════════════════════════════════════════════ -->
+<!-- THANK YOU -->
 <div class="screen" id="screen-thankyou">
   <div class="card" style="text-align:center;">
     <div class="checkmark">✓</div>
     <div class="study-label">Study Complete</div>
     <h1>Thank you so much!</h1>
-    <p>You've completed all 6 passages. Your responses have been saved and will contribute to research on reading and AI at IGDTUW.</p>
+    <p>You have completed all 6 passages. Your responses have been saved and will contribute to research on reading and AI at IGDTUW.</p>
     <p>This study was conducted by Himanshi under the guidance of Rishab Kaushal, ACM IGDTUW.</p>
-    <p style="font-size:13px; margin-top:8px;">You're free to close this tab now.</p>
+    <p style="font-size:13px; margin-top:8px;">You are free to close this tab now.</p>
   </div>
 </div>
 
+<!-- Hidden iframe target for Google Form submission (avoids page navigation) -->
+<iframe name="hidden-form-target" style="display:none;"></iframe>
+
 <script>
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CONFIG
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyr2_dPenygVM2qZHIbxS8Bac3RfzYiUEf4XveyXQGYSRq21kPjs8-BwMbQIhXzwrQH/exec';
 
-// ═══════════════════════════════════════════════════════════
-// PASSAGE DATA
-// paste your full passage texts here
-// format: passageId: { topic, text, questions: [...] }
-// ═══════════════════════════════════════════════════════════
+// Google Form field IDs (from pre-filled link)
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSf-DwU2GhCAXVUwBBYDXuz3vz50nchGjvwIStXE8ciAE9lB4A/formResponse';
+const FORM_FIELDS = {
+  participantId:    'entry.237401259',
+  passageId:        'entry.1209294864',
+  q1:               'entry.1755758914',
+  q2:               'entry.2045975081',
+  q3:               'entry.350628097',
+  q4:               'entry.1804191498',
+  q5:               'entry.670875112',
+  fixationDuration: 'entry.1657394035',
+  regressionCount:  'entry.289416263',
+  readingSpeed:     'entry.1857202811',
+  comprehensionScore: 'entry.1934905112'
+};
+
+// ═══════════════════════════════════════
+// PASSAGES
+// ═══════════════════════════════════════
 const PASSAGES = {
   'T1-V1': {
     topic: 'Mental Health and Emotional Wellbeing',
     text: `You don't just wake up with it one day. You don't just decide to have it. It is an overarching feeling for months or years before you identify it. It is the feeling of getting less excited about your favorite things. It is the feeling of wanting to stay in bed all day and not caring in the world. It's shutting out the world around you. The unread text messages, the declined calls, the messy room, and the piercing headache from having too many thoughts. Something that so many of us go through, not even knowing. Each day is pretend. Pretending to have joy for the day ahead, seeing the purpose that we have. Freshman year of high school, I woke every day and each new task felt like sinking deeper into a body of water that had no bottom. I stayed silent because I didn't know if I was the only one going through this. I stayed silent because I didn't want anyone to worry. I stayed silent because I was afraid.`,
     questions: [
       { type: 'mcq', q: 'What did the writer compare each daily task to in high school?', options: ['Running a race with no finish line', 'Sinking deeper into water with no bottom', 'Climbing a mountain alone', 'Carrying a heavy bag uphill'], answer: 1 },
-      { type: 'mcq', q: 'Why did the writer stay silent about what they were going through?', options: ['They didn\'t know what was wrong', 'They didn\'t want anyone to worry and were afraid', 'They thought it would go away on its own', 'They had no one to talk to'], answer: 1 },
-      { type: 'mcq', q: 'What is the main feeling this passage describes?', options: ['Excitement about growing up', 'The quiet, invisible weight of struggling mentally without telling anyone', 'Anger at people who didn\'t notice', 'Relief after asking for help'], answer: 1 },
+      { type: 'mcq', q: 'Why did the writer stay silent?', options: ['They did not know what was wrong', 'They did not want anyone to worry and were afraid', 'They thought it would go away', 'They had no one to talk to'], answer: 1 },
+      { type: 'mcq', q: 'What is the main feeling this passage describes?', options: ['Excitement about growing up', 'The quiet invisible weight of struggling mentally without telling anyone', 'Anger at people who did not notice', 'Relief after asking for help'], answer: 1 },
       { type: 'mcq', q: 'What can you infer about how the writer felt about their own experience?', options: ['Proud of how they handled it', 'Isolated and unsure if others felt the same', 'Angry and resentful', 'Indifferent and unbothered'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
@@ -518,42 +200,42 @@ const PASSAGES = {
     text: `I used to think mental health was something other people talked about, until one ordinary Tuesday when I sat in my parked bus after college and realized I could not stop crying. Nothing dramatic had happened. Weeks of pressure, expectations, and pretending everything was fine had simply caught up. That afternoon changed how I treated myself. Instead of calling myself lazy, I started asking, "What do you need?" Sometimes the answer was sleep. Sometimes it was a walk without headphones. Sometimes it was texting a friend before disappearing. Healing has never looked impressive. It usually happens quietly, through tiny choices that nobody applauds. I still have difficult mornings, but they no longer convince me that I am failing. I keep a notebook beside my bed where I write one honest sentence every night, even if it says today felt heavy. Seeing those pages fill reminds me that difficult feelings pass, while I remain. That thought gives me enough courage to begin again the next morning with a little more patience and hope.`,
     questions: [
       { type: 'mcq', q: 'What habit did the writer start to help themselves?', options: ['Going for runs every morning', 'Writing one honest sentence in a notebook every night', 'Calling a therapist weekly', 'Meditating before sleep'], answer: 1 },
-      { type: 'mcq', q: 'What triggered the writer\'s realization on the Tuesday they mention?', options: ['A fight with a friend', 'A failed exam', 'Nothing dramatic — weeks of pressure had caught up', 'A difficult conversation with family'], answer: 2 },
-      { type: 'mcq', q: 'What is the central message of this passage?', options: ['Mental health problems need professional treatment', 'Healing is quiet, unglamorous, and happens through small daily choices', 'You should talk to friends about everything', 'Crying is a sign of weakness'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer seem to feel about mental health by the end of the passage?', options: ['Still confused and lost', 'More at peace, with a gentler relationship with themselves', 'Angry at how long it took', 'Indifferent'], answer: 1 },
+      { type: 'mcq', q: 'What triggered the writer on that Tuesday?', options: ['A fight with a friend', 'A failed exam', 'Nothing dramatic — weeks of pressure caught up', 'A difficult conversation with family'], answer: 2 },
+      { type: 'mcq', q: 'What is the central message of this passage?', options: ['Mental health problems need professional treatment', 'Healing is quiet and happens through small daily choices', 'You should talk to friends about everything', 'Crying is a sign of weakness'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer feel about mental health by the end?', options: ['Still confused and lost', 'More at peace with a gentler relationship with themselves', 'Angry at how long it took', 'Indifferent'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T1-V4': {
     topic: 'Mental Health and Emotional Wellbeing',
-    text: `I used to think being "fine" meant not crying in public, so I got good at holding my face still on crowded metros while everything was on fire. It took until second semester to admit that pushing through wasn't the same as being okay. There was one Tuesday I sat on my hostel floor at 2am, not sad exactly, just empty, scrolling without reading anything. I didn't call anyone. I wish I had. What changed things wasn't some big breakthrough, it was small: sleeping on time, telling one friend the truth instead of "I'm just tired," letting myself take a day off without narrating it as laziness. I still have weeks where my brain feels like a browser with forty tabs open and I can't find the one making the noise. I've stopped treating that as failure. Emotional wellbeing isn't a fixed state you arrive at once and keep forever, it's more like ongoing maintenance, quiet and unglamorous, done mostly when no one's watching and there's no reward for it.`,
+    text: `I used to think being fine meant not crying in public, so I got good at holding my face still on crowded metros while everything was on fire. It took until second semester to admit that pushing through was not the same as being okay. There was one Tuesday I sat on my hostel floor at 2am, not sad exactly, just empty, scrolling without reading anything. I did not call anyone. I wish I had. What changed things was not some big breakthrough, it was small: sleeping on time, telling one friend the truth instead of saying I am just tired, letting myself take a day off without narrating it as laziness. I still have weeks where my brain feels like a browser with forty tabs open and I cannot find the one making the noise. I have stopped treating that as failure. Emotional wellbeing is not a fixed state you arrive at once and keep forever, it is more like ongoing maintenance, quiet and unglamorous, done mostly when no one is watching and there is no reward for it.`,
     questions: [
       { type: 'mcq', q: 'What does the writer compare their mental state to?', options: ['A storm about to break', 'A browser with forty tabs open', 'A phone with low battery', 'A broken clock'], answer: 1 },
       { type: 'mcq', q: 'What did the writer wish they had done on the night they mention?', options: ['Gone for a walk', 'Called someone', 'Written in a journal', 'Gone to sleep earlier'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main point about emotional wellbeing?', options: ['It requires professional help', 'It\'s a permanent state you reach once', 'It\'s ongoing, quiet maintenance with no reward', 'It depends on other people'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with asking for help?', options: ['They find it easy and do it often', 'They struggled with it but are slowly learning', 'They believe it\'s unnecessary', 'They prefer professional help only'], answer: 1 },
+      { type: 'mcq', q: 'What is the main point about emotional wellbeing?', options: ['It requires professional help', 'It is a permanent state you reach once', 'It is ongoing quiet maintenance with no reward', 'It depends on other people'], answer: 2 },
+      { type: 'mcq', q: 'What can you infer about the writer and asking for help?', options: ['They find it easy', 'They struggled with it but are slowly learning', 'They believe it is unnecessary', 'They prefer professional help only'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T1-V5': {
     topic: 'Mental Health and Emotional Wellbeing',
-    text: `I used to think tracking my mood meant capturing the big storms, the days where I couldn't pull myself out of bed or when anxiety made my chest feel like tight metal. But lately, I've realized my emotional wellbeing is actually built in the quiet, boring gaps between those extremes. Last Tuesday, I sat on my kitchen floor at 4:00 PM, watching a single patch of sunlight shift across the linoleum while my tea went cold. Usually, that kind of stillness would panic me, triggering a rush to be productive or fill the silence with noise. Instead, I just breathed. I let myself feel tired without judging the fatigue. Mental health isn't a puzzle you solve once and walk away from; it is an ongoing negotiation with your own mind. It's learning how to stay when the discomfort hits, rather than instantly reaching for a distraction. By the time the sun moved past the cabinet, nothing had magically changed, but my chest felt lighter.`,
+    text: `I used to think tracking my mood meant capturing the big storms, the days where I could not pull myself out of bed or when anxiety made my chest feel like tight metal. But lately I have realized my emotional wellbeing is actually built in the quiet boring gaps between those extremes. Last Tuesday, I sat on my kitchen floor at 4pm, watching a single patch of sunlight shift across the linoleum while my tea went cold. Usually that kind of stillness would panic me, triggering a rush to be productive or fill the silence with noise. Instead I just breathed. I let myself feel tired without judging the fatigue. Mental health is not a puzzle you solve once and walk away from. It is an ongoing negotiation with your own mind. It is learning how to stay when the discomfort hits, rather than instantly reaching for a distraction. By the time the sun moved past the cabinet, nothing had magically changed, but my chest felt lighter.`,
     questions: [
-      { type: 'mcq', q: 'Where was the writer sitting during the moment they describe?', options: ['On their hostel room floor', 'On a park bench', 'On their kitchen floor', 'In a bus'], answer: 2 },
-      { type: 'mcq', q: 'What did the writer do differently from usual during that moment?', options: ['Called a friend for support', 'Started working to fill the silence', 'Let themselves feel tired without judging it', 'Went for a walk outside'], answer: 2 },
+      { type: 'mcq', q: 'Where was the writer during the moment they describe?', options: ['On their hostel room floor', 'On a park bench', 'On their kitchen floor', 'In a bus'], answer: 2 },
+      { type: 'mcq', q: 'What did the writer do differently from usual?', options: ['Called a friend for support', 'Started working to fill the silence', 'Let themselves feel tired without judging it', 'Went for a walk outside'], answer: 2 },
       { type: 'mcq', q: 'How does the writer describe mental health?', options: ['A problem to be solved once', 'An ongoing negotiation with your own mind', 'Something only visible in crisis moments', 'A result of good habits'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s past relationship with stillness?', options: ['They always found it peaceful', 'It used to panic them and push them toward productivity', 'They had never experienced it before', 'They avoided it by sleeping'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the writer and stillness in the past?', options: ['They always found it peaceful', 'It used to panic them and push them toward productivity', 'They had never experienced it before', 'They avoided it by sleeping'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T2-V2': {
     topic: 'Technology and Social Media',
-    text: `Ten months ago I took a break from short-form social media. I intended on a six-month break, but this turned into ten months, and I still don't feel like reassessing the possibility of going back. When I first joined Substack in 2021, I wouldn't have considered it a social media platform. Now, I do. Social media apps like Instagram and TikTok went through a cycle. They start out by selling us on the idea that they are made to connect us, and eventually show by their actions that they have other priorities. I make money on Substack. I have fascinating conversations through it. I get access to opportunities via it. I'm not going anywhere, because I believe in the upsides — but I refuse to become addicted. I don't scroll on Notes. I don't read from the app. I don't analyse my stats. Maybe this is my loss. But for now, my goal is to use this platform in a sustainable way to share, create, and connect — without spending a disproportionate amount of my time striving to game the system.`,
+    text: `Ten months ago I took a break from short-form social media. I intended on a six-month break, but this turned into ten months, and I still do not feel like reassessing the possibility of going back. When I first joined Substack in 2021, I would not have considered it a social media platform. Now I do. Social media apps like Instagram and TikTok went through a cycle. They start out by selling us on the idea that they are made to connect us, and eventually show by their actions that they have other priorities. I make money on Substack. I have fascinating conversations through it. I get access to opportunities via it. I am not going anywhere, because I believe in the upsides. But I refuse to become addicted. I do not scroll on Notes. I do not read from the app. I do not analyse my stats. Maybe this is my loss. But for now, my goal is to use this platform in a sustainable way to share, create, and connect without spending a disproportionate amount of my time striving to game the system.`,
     questions: [
-      { type: 'mcq', q: 'How long did the writer\'s social media break last?', options: ['Six months', 'Eight months', 'Ten months', 'One year'], answer: 2 },
-      { type: 'mcq', q: 'What does the writer say social media platforms eventually reveal about themselves?', options: ['They are great for creativity', 'They have other priorities beyond connecting people', 'They become more honest over time', 'They reward consistent users'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main stance toward social media?', options: ['Complete rejection of all platforms', 'Uncritical enthusiasm', 'Using it intentionally without becoming addicted', 'Avoiding it to protect mental health'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer defines a healthy relationship with technology?', options: ['Zero usage is the only safe approach', 'Using it deliberately for value while avoiding compulsive behaviors', 'Tracking analytics carefully to stay in control', 'Letting others decide when to use it'], answer: 1 },
+      { type: 'mcq', q: 'How long did the break last?', options: ['Six months', 'Eight months', 'Ten months', 'One year'], answer: 2 },
+      { type: 'mcq', q: 'What does the writer say social media platforms eventually reveal?', options: ['They are great for creativity', 'They have other priorities beyond connecting people', 'They become more honest over time', 'They reward consistent users'], answer: 1 },
+      { type: 'mcq', q: 'What is the main stance toward social media?', options: ['Complete rejection', 'Uncritical enthusiasm', 'Using it intentionally without becoming addicted', 'Avoiding it to protect mental health'], answer: 2 },
+      { type: 'mcq', q: 'What can you infer about a healthy relationship with technology?', options: ['Zero usage is the only safe approach', 'Using it deliberately for value while avoiding compulsive behaviors', 'Tracking analytics to stay in control', 'Letting others decide when to use it'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
@@ -561,337 +243,357 @@ const PASSAGES = {
     topic: 'Technology and Social Media',
     text: `My phone is probably the first thing I reach for every morning, even before I fully open my eyes. That habit makes me uncomfortable because I know how easily minutes become hours. One evening I caught myself watching strangers celebrate milestones while ignoring the dinner my family had already served. My mother called my name twice before I looked up. That tiny moment embarrassed me more than any screen time notification ever could. Social media has introduced me to inspiring creators, useful ideas, and friendships that never would have existed otherwise. It has also quietly convinced me that everyone else is constantly accomplishing something extraordinary. Now I try leaving my phone across the room while studying or eating. The silence feels strange at first, then surprisingly peaceful. I still enjoy posting pictures and sharing funny videos, but I have stopped expecting likes to measure whether a day mattered. Some of my favorite memories were never uploaded anywhere. They exist only in conversations, laughter, and the feeling of walking home after sunset without checking a single notification.`,
     questions: [
-      { type: 'mcq', q: 'What moment made the writer feel most embarrassed?', options: ['A low number of likes on a post', 'Missing their mother calling their name while on their phone', 'Forgetting to post about an important event', 'Losing followers after a break'], answer: 1 },
-      { type: 'mcq', q: 'What strategy did the writer adopt to manage phone use?', options: ['Deleted all social media apps', 'Set a screen time limit', 'Left their phone in another room while studying or eating', 'Only used their phone after 8pm'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central observation about social media?', options: ['It is mostly harmful and should be avoided', 'It has both genuine value and quietly distorts how we measure a good day', 'It only benefits people who use it professionally', 'It is addictive and impossible to control'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s best memories?', options: ['They were all documented on social media', 'They happened offline and were never uploaded', 'They involved online friendships', 'They came from social media interactions'], answer: 1 },
+      { type: 'mcq', q: 'What moment made the writer feel most embarrassed?', options: ['A low number of likes', 'Missing their mother calling their name while on their phone', 'Forgetting to post about an event', 'Losing followers'], answer: 1 },
+      { type: 'mcq', q: 'What strategy did the writer adopt?', options: ['Deleted all social media apps', 'Set a screen time limit', 'Left their phone in another room while studying or eating', 'Only used phone after 8pm'], answer: 2 },
+      { type: 'mcq', q: 'What is the central observation?', options: ['Social media is mostly harmful', 'It has genuine value but distorts how we measure a good day', 'It only benefits professional users', 'It is addictive and impossible to control'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the best memories?', options: ['All documented on social media', 'They happened offline and were never uploaded', 'They involved online friendships', 'They came from social media interactions'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T2-V4': {
     topic: 'Technology and Social Media',
-    text: `I deleted Instagram once for eleven days and felt disoriented, like I'd forgotten a language I spoke fluently. That scared me more than anything else could have. I don't think social media made me unhappy, but it rewired how I measure a good day, against a highlight reel instead of how the day felt. I remember editing a reel for forty minutes, cutting a moment until it looked effortless, realizing I'd spent more time performing the memory than living it. There's a strange guilt in that. I'm not anti-technology, I like learning anything at 1am or talking to people across the world instantly. But I've noticed my attention flinching, reaching for my phone in silences that used to be silences. I'm trying to be more deliberate, posting less, watching more, letting boring moments stay boring instead of becoming content. Some nights I still fall into the scroll and lose an hour I'll never get back, and I feel it the next morning, a specific kind of regret with no real event attached to it.`,
+    text: `I deleted Instagram once for eleven days and felt disoriented, like I had forgotten a language I spoke fluently. That scared me more than anything else could have. I do not think social media made me unhappy, but it rewired how I measure a good day, against a highlight reel instead of how the day felt. I remember editing a reel for forty minutes, cutting a moment until it looked effortless, realizing I had spent more time performing the memory than living it. There is a strange guilt in that. I am not anti-technology. I like learning anything at 1am or talking to people across the world instantly. But I have noticed my attention flinching, reaching for my phone in silences that used to be silences. I am trying to be more deliberate, posting less, watching more, letting boring moments stay boring instead of becoming content. Some nights I still fall into the scroll and lose an hour I will never get back, and I feel it the next morning, a specific kind of regret with no real event attached to it.`,
     questions: [
       { type: 'mcq', q: 'How long did the writer delete Instagram for?', options: ['Seven days', 'Eleven days', 'Two weeks', 'One month'], answer: 1 },
-      { type: 'mcq', q: 'What realization did the writer have while editing a reel?', options: ['That their content wasn\'t good enough', 'That they had spent more time performing the memory than living it', 'That editing tools were too complicated', 'That their followers didn\'t engage with reels'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer most concerned about regarding their relationship with social media?', options: ['The quality of content they produce', 'How social media has rewired how they measure a good day', 'The number of hours they spend on it', 'Missing important updates from friends'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer feels after losing an hour to scrolling?', options: ['Relaxed and entertained', 'A specific kind of regret with no real event attached', 'Motivated to create more content', 'Neutral and unbothered'], answer: 1 },
+      { type: 'mcq', q: 'What realization came while editing a reel?', options: ['The content was not good enough', 'They had spent more time performing the memory than living it', 'Editing tools were too complicated', 'Followers did not engage with reels'], answer: 1 },
+      { type: 'mcq', q: 'What is the writer most concerned about?', options: ['Quality of content', 'How social media rewired how they measure a good day', 'Hours spent on it', 'Missing important updates'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer feel after losing an hour to scrolling?', options: ['Relaxed and entertained', 'A specific kind of regret with no real event attached', 'Motivated to create more content', 'Neutral and unbothered'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T2-V5': {
     topic: 'Technology and Social Media',
-    text: `My phone screen time report arrived this morning like an uninvited ghost, informing me I spent four hours online yesterday. Four hours. I tried to remember what I actually looked at, but my mind was completely blank. I just recalled the physical sensation of scrolling — that mindless, rhythmic thumb swipe that feels like digging through sand looking for something shiny. Later, I went for a walk without my headphones, leaving them deliberately on my desk. The silence was incredibly loud at first. I noticed the sharp, metallic squeak of a neighbor's rusty gate and the specific way the wind rattled the dry oak leaves overhead. Without a digital screen filtering my reality, the world suddenly regained its rough edges and vibrant dimensions. Social media promises to connect us, but it often just numbs us, turning vivid human experiences into flat, performative squares. Standing on the sidewalk, feeling the cool autumn air hit my face, I realized how much life I miss when I am looking at a glass reflection of someone else's timeline.`,
+    text: `My phone screen time report arrived this morning like an uninvited ghost, informing me I spent four hours online yesterday. Four hours. I tried to remember what I actually looked at, but my mind was completely blank. I just recalled the physical sensation of scrolling, that mindless rhythmic thumb swipe that feels like digging through sand looking for something shiny. Later I went for a walk without my headphones, leaving them deliberately on my desk. The silence was incredibly loud at first. I noticed the sharp metallic squeak of a neighbor's rusty gate and the specific way the wind rattled the dry oak leaves overhead. Without a digital screen filtering my reality, the world suddenly regained its rough edges and vibrant dimensions. Social media promises to connect us, but it often just numbs us, turning vivid human experiences into flat performative squares. Standing on the sidewalk, feeling the cool autumn air hit my face, I realized how much life I miss when I am looking at a glass reflection of someone else's timeline.`,
     questions: [
-      { type: 'mcq', q: 'How many hours did the writer spend online the day before?', options: ['Two hours', 'Three hours', 'Four hours', 'Five hours'], answer: 2 },
-      { type: 'mcq', q: 'What did the writer notice on their walk that they might have missed otherwise?', options: ['A beautiful sunset', 'The squeak of a gate and wind in the leaves', 'A street musician playing nearby', 'Children playing in the park'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central critique of social media?', options: ['It wastes too much time', 'It numbs us and turns vivid experiences into flat performative squares', 'It makes people compare themselves too much', 'It prioritizes entertainment over education'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer feels about their offline moments?', options: ['They find them boring and uncomfortable', 'They find them richer and more real than online time', 'They feel anxious without a phone', 'They prefer online interactions'], answer: 1 },
+      { type: 'mcq', q: 'How many hours did the writer spend online?', options: ['Two hours', 'Three hours', 'Four hours', 'Five hours'], answer: 2 },
+      { type: 'mcq', q: 'What did the writer notice on their walk?', options: ['A beautiful sunset', 'The squeak of a gate and wind in the leaves', 'A street musician', 'Children playing'], answer: 1 },
+      { type: 'mcq', q: 'What is the central critique of social media?', options: ['It wastes time', 'It numbs us and turns vivid experiences into flat performative squares', 'It makes people compare too much', 'It prioritizes entertainment over education'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer feel about offline moments?', options: ['Boring and uncomfortable', 'Richer and more real than online time', 'Anxious without a phone', 'They prefer online interactions'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T3-V1': {
     topic: 'Relationships and Friendships',
-    text: `I just now realized that I have developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I have since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick guilty feeling that comes with it. Our friendship wasn't always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, eventually living together. At some point our friendship became fragile, and I was afraid to rattle it, didn't want the cracks to show where I could see them. In the end, we just lost touch. I don't know who was the last person to call, who was due to call back. I suppose it doesn't matter, although part of me really hopes I wasn't the one. Maybe sometimes close friendships just trail off, and that has to be okay.`,
+    text: `I just now realized that I have developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I have since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick guilty feeling that comes with it. Our friendship was not always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, eventually living together. At some point our friendship became fragile, and I was afraid to rattle it, did not want the cracks to show where I could see them. In the end, we just lost touch. I do not know who was the last person to call, who was due to call back. I suppose it does not matter, although part of me really hopes I was not the one. Maybe sometimes close friendships just trail off, and that has to be okay.`,
     questions: [
-      { type: 'mcq', q: 'Why does the writer feel uneasy about Philadelphia?', options: ['They had a bad experience there', 'A friend they lost touch with lives there', 'They never liked the city', 'They have a job interview there they are avoiding'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer describe the intensity of their old friendship?', options: ['Healthy and balanced', 'Slightly codependent, like family more than friends', 'Distant and professional', 'Built mostly online'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main reflection on the friendship ending?', options: ['It was someone\'s specific fault', 'Sometimes close friendships just trail off and that has to be okay', 'They should have fought harder to keep it', 'Distance made it inevitable'], answer: 1 },
-      { type: 'mcq', q: 'What emotion best describes the writer\'s tone throughout the passage?', options: ['Anger and resentment', 'Quiet guilt and unresolved sadness', 'Relief that it ended', 'Indifference'], answer: 1 },
+      { type: 'mcq', q: 'Why does the writer feel uneasy about Philadelphia?', options: ['They had a bad experience there', 'A friend they lost touch with lives there', 'They never liked the city', 'They have a job interview they are avoiding'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer describe the friendship?', options: ['Healthy and balanced', 'Slightly codependent, like family more than friends', 'Distant and professional', 'Built mostly online'], answer: 1 },
+      { type: 'mcq', q: 'What is the main reflection on the friendship ending?', options: ['It was someone specific fault', 'Sometimes close friendships just trail off and that has to be okay', 'They should have fought harder', 'Distance made it inevitable'], answer: 1 },
+      { type: 'mcq', q: 'What emotion best describes the tone?', options: ['Anger and resentment', 'Quiet guilt and unresolved sadness', 'Relief that it ended', 'Indifference'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T3-V3': {
     topic: 'Relationships and Friendships',
-    text: `The older I get, the more I realize friendships survive because of effort, not luck. I used to believe the right people would simply stay forever. Then one close friend and I stopped talking after a misunderstanding that neither of us addressed. Months passed before we finally met at a small café near campus. We laughed awkwardly, admitted we had both been stubborn, and ordered the same iced coffee we always used to share. That conversation reminded me how much pride can cost. Relationships are rarely destroyed by one dramatic argument. More often, they fade through unanswered messages, postponed plans, and assumptions that someone else will reach out first. I still make mistakes. I sometimes overthink texts or worry that I care more than other people do. Even so, I have become braver about saying, "I miss you," instead of waiting for perfect timing. The friendships that matter most make ordinary days brighter without demanding constant excitement. They give me space to change while remembering older versions of me with kindness. I hope I never become too busy to protect those connections with honest conversations, shared meals, patience, and presence.`,
+    text: `The older I get, the more I realize friendships survive because of effort, not luck. I used to believe the right people would simply stay forever. Then one close friend and I stopped talking after a misunderstanding that neither of us addressed. Months passed before we finally met at a small cafe near campus. We laughed awkwardly, admitted we had both been stubborn, and ordered the same iced coffee we always used to share. That conversation reminded me how much pride can cost. Relationships are rarely destroyed by one dramatic argument. More often, they fade through unanswered messages, postponed plans, and assumptions that someone else will reach out first. I still make mistakes. I sometimes overthink texts or worry that I care more than other people do. Even so, I have become braver about saying I miss you, instead of waiting for perfect timing. The friendships that matter most make ordinary days brighter without demanding constant excitement. They give me space to change while remembering older versions of me with kindness.`,
     questions: [
-      { type: 'mcq', q: 'What did the writer and their friend order when they finally met?', options: ['Tea and cookies', 'The same iced coffee they used to share', 'Different drinks as a sign of change', 'Nothing — they just talked'], answer: 1 },
-      { type: 'mcq', q: 'According to the writer, how do friendships most often fade?', options: ['Through a big dramatic fight', 'Through unanswered messages, postponed plans, and assumptions', 'Through jealousy and competition', 'Through moving to different cities'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central belief about keeping friendships?', options: ['The right people naturally stay', 'Friendships need luck and timing', 'Friendships survive through consistent effort', 'Distance always weakens bonds'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer now approaches friendship differently?', options: ['They are more selective about who they trust', 'They are braver about expressing that they miss people', 'They prefer fewer, more distant friendships', 'They let friendships fade naturally'], answer: 1 },
+      { type: 'mcq', q: 'What did the writer and their friend order when they met?', options: ['Tea and cookies', 'The same iced coffee they used to share', 'Different drinks as a sign of change', 'Nothing, they just talked'], answer: 1 },
+      { type: 'mcq', q: 'How do friendships most often fade?', options: ['Through a big dramatic fight', 'Through unanswered messages and postponed plans', 'Through jealousy', 'Through moving to different cities'], answer: 1 },
+      { type: 'mcq', q: 'What is the central belief about keeping friendships?', options: ['The right people naturally stay', 'Friendships need luck and timing', 'Friendships survive through consistent effort', 'Distance always weakens bonds'], answer: 2 },
+      { type: 'mcq', q: 'How does the writer now approach friendship?', options: ['More selective about who they trust', 'Braver about expressing that they miss people', 'They prefer fewer distant friendships', 'They let friendships fade naturally'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T3-V4': {
     topic: 'Relationships and Friendships',
-    text: `The friendships that have lasted for me were never the loud, constant ones — they were the ones that could survive silence. I have a friend I don't text for weeks sometimes, and when we do talk it's like no time passed, which honestly used to confuse me because I thought love needed proof of daily effort. I learned otherwise the hard way, holding onto people who wanted attention more than connection, mistaking intensity for intimacy. There was a birthday two years ago where almost no one showed up, and the two people who did taught me more about friendship than every group chat ever did. I've become someone who values depth over headcount now. I ask real questions instead of "how are you," because "how are you" rarely gets an honest answer. I've also had to let go of people I genuinely cared about, not because of some dramatic falling out, just growth in different directions, which somehow hurts more because there's no one to be angry at. Relationships are less about finding people who never leave and more about finding the ones worth missing when they eventually do.`,
+    text: `The friendships that have lasted for me were never the loud constant ones. They were the ones that could survive silence. I have a friend I do not text for weeks sometimes, and when we do talk it is like no time passed, which honestly used to confuse me because I thought love needed proof of daily effort. I learned otherwise the hard way, holding onto people who wanted attention more than connection, mistaking intensity for intimacy. There was a birthday two years ago where almost no one showed up, and the two people who did taught me more about friendship than every group chat ever did. I have become someone who values depth over headcount now. I ask real questions instead of how are you, because how are you rarely gets an honest answer. I have also had to let go of people I genuinely cared about, not because of some dramatic falling out, just growth in different directions, which somehow hurts more because there is no one to be angry at.`,
     questions: [
-      { type: 'mcq', q: 'What event taught the writer the most about true friendship?', options: ['A surprise party thrown for them', 'A birthday where almost no one showed up but two people did', 'A long trip with a group of friends', 'A difficult conversation in a group chat'], answer: 1 },
-      { type: 'mcq', q: 'What did the writer learn the hard way about relationships?', options: ['That distance always ends friendships', 'That intensity is the same as intimacy', 'That people who wanted attention were not the same as people who wanted connection', 'That group chats are the best way to stay in touch'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main realization about lasting friendships?', options: ['They require daily contact to survive', 'They are about finding people who never leave', 'They are the quiet ones that can survive silence', 'They are built on shared interests'], answer: 2 },
-      { type: 'mcq', q: 'How does the writer feel about letting go of people they genuinely cared about?', options: ['Relieved and unbothered', 'It hurts more because there\'s no one to be angry at', 'Angry and resentful', 'Indifferent'], answer: 1 },
+      { type: 'mcq', q: 'What event taught the writer the most about friendship?', options: ['A surprise party', 'A birthday where almost no one showed up but two people did', 'A long trip with friends', 'A difficult group chat conversation'], answer: 1 },
+      { type: 'mcq', q: 'What did the writer learn the hard way?', options: ['That distance always ends friendships', 'That intensity is the same as intimacy', 'That people wanting attention were not the same as wanting connection', 'That group chats are best for staying in touch'], answer: 2 },
+      { type: 'mcq', q: 'What is the main realization about lasting friendships?', options: ['They require daily contact', 'They are about finding people who never leave', 'They are the quiet ones that survive silence', 'They are built on shared interests'], answer: 2 },
+      { type: 'mcq', q: 'How does letting go of people feel for the writer?', options: ['Relieved and unbothered', 'It hurts more because there is no one to be angry at', 'Angry and resentful', 'Indifferent'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T3-V5': {
     topic: 'Relationships and Friendships',
-    text: `We were sitting in a crowded, noisy diner at midnight, splitting a plate of cold fries, when my best friend looked at me and said, "You don't have to perform for me." The words hit me hard, cracking through the armor of positivity I always try to wear. For years, I believed that maintaining friendships meant being the funny one, the reliable anchor, or the person who never brought any heavy baggage to the table. I was terrified that showing my messy, unresolved pieces would drive people away. But in that booth, under the flickering fluorescent light, I finally let down my guard and talked about how lost I felt. She didn't offer toxic positivity or try to fix it; she just listened, keeping her hand steady on the table. That night taught me that real intimacy isn't built on perfection or shared highlights. It is forged in the willingness to be seen in your weakest moments and trusted not to run away. True friendship is a safe harbor where you can drop the heavy weight of expectations and simply be messy together.`,
+    text: `We were sitting in a crowded noisy diner at midnight, splitting a plate of cold fries, when my best friend looked at me and said, you do not have to perform for me. The words hit me hard, cracking through the armor of positivity I always try to wear. For years, I believed that maintaining friendships meant being the funny one, the reliable anchor, or the person who never brought any heavy baggage to the table. I was terrified that showing my messy unresolved pieces would drive people away. But in that booth, under the flickering fluorescent light, I finally let down my guard and talked about how lost I felt. She did not offer toxic positivity or try to fix it. She just listened, keeping her hand steady on the table. That night taught me that real intimacy is not built on perfection or shared highlights. It is forged in the willingness to be seen in your weakest moments and trusted not to run away.`,
     questions: [
-      { type: 'mcq', q: 'Where were the writer and their friend when this conversation happened?', options: ['A park at sunset', 'A crowded diner at midnight', 'A quiet café in the afternoon', 'Their college common room'], answer: 1 },
-      { type: 'mcq', q: 'What did the writer believe for years about maintaining friendships?', options: ['You had to be constantly available', 'You had to be the funny, reliable one who never showed struggles', 'You needed to share everything openly', 'You should only keep a few close friends'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central insight about real intimacy?', options: ['It is built on shared achievements and positive moments', 'It requires daily communication', 'It is forged in being seen in your weakest moments without being abandoned', 'It grows from similar personalities'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s behavior in friendships before this moment?', options: ['They were always honest about their feelings', 'They performed positivity to avoid showing vulnerability', 'They avoided close friendships entirely', 'They were known for being emotionally open'], answer: 1 },
+      { type: 'mcq', q: 'Where were the writer and their friend?', options: ['A park at sunset', 'A crowded diner at midnight', 'A quiet cafe in the afternoon', 'Their college common room'], answer: 1 },
+      { type: 'mcq', q: 'What did the writer believe for years about friendships?', options: ['You had to be constantly available', 'You had to be the funny reliable one who never showed struggles', 'You needed to share everything openly', 'You should keep only a few close friends'], answer: 1 },
+      { type: 'mcq', q: 'What is the central insight about real intimacy?', options: ['It is built on shared achievements', 'It requires daily communication', 'It is forged in being seen in weakness without being abandoned', 'It grows from similar personalities'], answer: 2 },
+      { type: 'mcq', q: 'What can you infer about the writer before this moment?', options: ['They were always honest about feelings', 'They performed positivity to avoid vulnerability', 'They avoided close friendships', 'They were known for being emotionally open'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T4-V3': {
     topic: 'Career and Future Planning',
-    text: `Choosing a career feels strangely exciting and terrifying at the same time. As a child, I imagined adulthood arrived with certainty, like receiving a map that answered every question. Instead, I spend many evenings comparing opportunities, wondering whether I am making smart decisions or simply chasing whatever sounds impressive. During one internship interview, I admitted that I was still learning instead of pretending to know everything. I expected that honesty to hurt my chances, yet it became the strongest part of our conversation. Since then, I have stopped believing confidence means having every answer. I want meaningful work, but I also want enough balance to enjoy ordinary moments outside my job. Success means little if I am too exhausted to notice the people I love. My goals continue changing as I discover new interests, and that no longer scares me. Planning for the future has become less about predicting every step and more about building skills that travel with me anywhere. Curiosity, resilience, kindness, and discipline feel more dependable than perfect plans. They make uncertainty seem challenging instead of impossible.`,
+    text: `Choosing a career feels strangely exciting and terrifying at the same time. As a child, I imagined adulthood arrived with certainty, like receiving a map that answered every question. Instead, I spend many evenings comparing opportunities, wondering whether I am making smart decisions or simply chasing whatever sounds impressive. During one internship interview, I admitted that I was still learning instead of pretending to know everything. I expected that honesty to hurt my chances, yet it became the strongest part of our conversation. Since then, I have stopped believing confidence means having every answer. I want meaningful work, but I also want enough balance to enjoy ordinary moments outside my job. Success means little if I am too exhausted to notice the people I love. My goals continue changing as I discover new interests, and that no longer scares me. Planning for the future has become less about predicting every step and more about building skills that travel with me anywhere.`,
     questions: [
-      { type: 'mcq', q: 'What surprised the writer during their internship interview?', options: ['The interviewer was younger than expected', 'Their honesty about still learning became the strongest part of the conversation', 'They were offered the role on the spot', 'The questions were easier than expected'], answer: 1 },
-      { type: 'mcq', q: 'What does the writer now believe about confidence?', options: ['It means projecting certainty even when you don\'t have it', 'It doesn\'t matter in professional settings', 'It doesn\'t mean having every answer', 'It comes from years of experience only'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main shift in how they think about the future?', options: ['From excitement to fear', 'From predicting every step to building portable skills', 'From ambition to contentment', 'From individual goals to team-based thinking'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about what the writer values beyond professional success?', options: ['Fame and recognition', 'Balance to notice and enjoy the people they love', 'Financial stability above all else', 'Constant growth and achievement'], answer: 1 },
+      { type: 'mcq', q: 'What surprised the writer during their internship interview?', options: ['The interviewer was younger than expected', 'Their honesty about still learning became the strongest part', 'They were offered the role immediately', 'The questions were easier than expected'], answer: 1 },
+      { type: 'mcq', q: 'What does the writer now believe about confidence?', options: ['It means projecting certainty even when you do not have it', 'It does not matter professionally', 'It does not mean having every answer', 'It comes from years of experience only'], answer: 2 },
+      { type: 'mcq', q: 'What is the main shift in thinking about the future?', options: ['From excitement to fear', 'From predicting every step to building portable skills', 'From ambition to contentment', 'From individual to team-based thinking'], answer: 1 },
+      { type: 'mcq', q: 'What does the writer value beyond professional success?', options: ['Fame and recognition', 'Balance to enjoy the people they love', 'Financial stability above all', 'Constant growth and achievement'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T4-V4': {
     topic: 'Career and Future Planning',
-    text: `Everyone keeps asking what my five-year plan is, and honestly I don't have one — I have a direction and a lot of half-finished spreadsheets. I used to think not knowing exactly where I'd land meant I was behind, especially watching people my age post about internships and offers like they'd already figured out the equation. What's helped is realizing I don't need the whole map, just the next visible turn. Right now that turn looks like ML work I care about, research that keeps me up at night in the good way, not the anxious way. I remember finishing a project at 3am, exhausted, and still feeling this quiet thrill because the thing I built actually worked. That feeling told me more about my future than any career counselor session did. I'm learning to hold ambition loosely, wanting to build things that matter without needing every step pre-approved by some imagined version of success. I still panic sometimes comparing my timeline to everyone else's, refreshing feeds full of announcements that make my progress feel invisible by comparison.`,
+    text: `Everyone keeps asking what my five-year plan is, and honestly I do not have one. I have a direction and a lot of half-finished spreadsheets. I used to think not knowing exactly where I would land meant I was behind, especially watching people my age post about internships and offers like they had already figured out the equation. What has helped is realizing I do not need the whole map, just the next visible turn. Right now that turn looks like ML work I care about, research that keeps me up at night in the good way, not the anxious way. I remember finishing a project at 3am, exhausted, and still feeling this quiet thrill because the thing I built actually worked. That feeling told me more about my future than any career counselor session did. I am learning to hold ambition loosely, wanting to build things that matter without needing every step pre-approved by some imagined version of success.`,
     questions: [
-      { type: 'mcq', q: 'What does the writer say they have instead of a five-year plan?', options: ['A ten-year vision', 'A direction and a lot of half-finished spreadsheets', 'A clear roadmap approved by a mentor', 'Nothing at all'], answer: 1 },
-      { type: 'mcq', q: 'What gave the writer more clarity about their future than any career counselor?', options: ['A conversation with a senior professional', 'The quiet thrill of finishing a project at 3am that actually worked', 'Reading about successful people online', 'A career aptitude test'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main realization about career planning?', options: ['You need a detailed five-year plan', 'You only need to see the next visible turn, not the whole map', 'Career counselors are the best resource', 'You should follow what your peers are doing'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer feel when they see peers announcing achievements online?', options: ['Happy and inspired for them', 'Indifferent and unbothered', 'Their own progress feels invisible by comparison', 'Motivated to work harder immediately'], answer: 2 },
+      { type: 'mcq', q: 'What does the writer say they have instead of a five-year plan?', options: ['A ten-year vision', 'A direction and half-finished spreadsheets', 'A clear roadmap', 'Nothing at all'], answer: 1 },
+      { type: 'mcq', q: 'What gave the writer clarity about their future?', options: ['A conversation with a senior professional', 'The quiet thrill of finishing a project at 3am that actually worked', 'Reading about successful people', 'A career aptitude test'], answer: 1 },
+      { type: 'mcq', q: 'What is the main realization about career planning?', options: ['You need a detailed five-year plan', 'You only need to see the next visible turn', 'Career counselors are the best resource', 'Follow what peers are doing'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer feel seeing peers announce achievements online?', options: ['Happy and inspired', 'Indifferent and unbothered', 'Their own progress feels invisible by comparison', 'Motivated to work harder immediately'], answer: 2 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T4-V5': {
     topic: 'Career and Future Planning',
-    text: `Everyone keeps asking me where I see myself in five years, as if life is a straight, well-paved highway and I already have the map memorized. The truth is, looking at job boards makes my throat tighten with anxiety. I spent the last three months rewriting my resume, obsessing over strong action verbs and trying to make my brief, chaotic life experience look like a calculated, deliberate master plan. But last week, I talked to an older mentor who confessed she didn't find her true professional calling until she turned thirty-five. Hearing that felt like a sudden intake of oxygen. I am slowly learning to accept that a career doesn't have to be a singular, rigid identity that defines your entire worth. It can be a winding collection of curiosities, trial runs, and necessary pivots. My future isn't a terrifying trap I need to escape or solve today; it's an unfolding story. Right now, I am focusing less on finding the perfect final destination and more on building the skills, resilience, and adaptability to handle wherever the path eventually decides to lead.`,
+    text: `Everyone keeps asking me where I see myself in five years, as if life is a straight well-paved highway and I already have the map memorized. The truth is, looking at job boards makes my throat tighten with anxiety. I spent the last three months rewriting my resume, obsessing over strong action verbs and trying to make my brief chaotic life experience look like a calculated deliberate master plan. But last week, I talked to an older mentor who confessed she did not find her true professional calling until she turned thirty-five. Hearing that felt like a sudden intake of oxygen. I am slowly learning to accept that a career does not have to be a singular rigid identity that defines your entire worth. It can be a winding collection of curiosities, trial runs, and necessary pivots. My future is not a terrifying trap I need to escape or solve today. It is an unfolding story. Right now I am focusing less on finding the perfect final destination and more on building the skills and adaptability to handle wherever the path leads.`,
     questions: [
-      { type: 'mcq', q: 'What did the writer spend three months doing?', options: ['Applying to internships every day', 'Rewriting their resume to make their experience look deliberate', 'Studying for professional certifications', 'Meeting with career counselors'], answer: 1 },
-      { type: 'mcq', q: 'What did the mentor confess that gave the writer relief?', options: ['That resumes don\'t matter as much as people think', 'That she didn\'t find her calling until thirty-five', 'That career anxiety is always temporary', 'That the writer was already on the right path'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer now describe a career?', options: ['A rigid identity that defines your worth', 'A straight highway to a destination', 'A winding collection of curiosities, trial runs, and pivots', 'Something best figured out by thirty'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer felt before talking to the mentor?', options: ['Confident and clear', 'Anxious and behind schedule by their own measure', 'Excited about uncertainty', 'Indifferent to career outcomes'], answer: 1 },
+      { type: 'mcq', q: 'What did the writer spend three months doing?', options: ['Applying to internships every day', 'Rewriting their resume to make experience look deliberate', 'Studying for professional certifications', 'Meeting with career counselors'], answer: 1 },
+      { type: 'mcq', q: 'What did the mentor confess?', options: ['That resumes do not matter as much', 'That she did not find her calling until thirty-five', 'That career anxiety is always temporary', 'That the writer was already on the right path'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer now describe a career?', options: ['A rigid identity that defines your worth', 'A straight highway to a destination', 'A winding collection of curiosities and pivots', 'Something best figured out by thirty'], answer: 2 },
+      { type: 'mcq', q: 'How did the writer feel before talking to the mentor?', options: ['Confident and clear', 'Anxious and behind schedule', 'Excited about uncertainty', 'Indifferent'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T5-V3': {
     topic: 'Culture and Identity',
-    text: `Growing up taught me that identity is never just one thing. At home, certain traditions shaped my everyday life without much explanation. Outside, I met people whose customs, languages, and beliefs were completely different from mine. For a while I felt pressure to choose between fitting in and holding onto familiar parts of myself. One festival evening, while helping my grandmother arrange small lamps across our balcony, she told me stories she had heard from her own parents. Listening to her made those rituals feel alive instead of routine. I realized culture is carried through ordinary moments as much as celebrations. My identity keeps expanding every time I read something unfamiliar, travel somewhere new, or have an honest conversation with someone whose experiences differ from mine. I no longer see change as betrayal. I see it as adding new chapters without tearing out older pages. The version of me that exists today contains childhood memories, family traditions, personal choices, and unexpected influences from countless people. That mixture sometimes feels complicated, yet it also feels deeply authentic. I would not trade it for anything simpler.`,
+    text: `Growing up taught me that identity is never just one thing. At home, certain traditions shaped my everyday life without much explanation. Outside, I met people whose customs, languages, and beliefs were completely different from mine. For a while I felt pressure to choose between fitting in and holding onto familiar parts of myself. One festival evening, while helping my grandmother arrange small lamps across our balcony, she told me stories she had heard from her own parents. Listening to her made those rituals feel alive instead of routine. I realized culture is carried through ordinary moments as much as celebrations. My identity keeps expanding every time I read something unfamiliar, travel somewhere new, or have an honest conversation with someone whose experiences differ from mine. I no longer see change as betrayal. I see it as adding new chapters without tearing out older pages. The version of me that exists today contains childhood memories, family traditions, personal choices, and unexpected influences from countless people.`,
     questions: [
-      { type: 'mcq', q: 'What did the writer\'s grandmother do during the festival evening described?', options: ['Cooked traditional food for the family', 'Told stories she had heard from her own parents while arranging lamps', 'Taught the writer a traditional song', 'Showed old photographs from her childhood'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer now see change in relation to their identity?', options: ['As a threat to their original self', 'As betrayal of their roots', 'As adding new chapters without tearing out old ones', 'As something to be avoided'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central insight about identity?', options: ['It is fixed by childhood experiences', 'It is a mixture that keeps expanding through new experiences', 'It must be chosen between two cultures', 'It is shaped only by family traditions'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer felt earlier in life about their cultural identity?', options: ['Proud and confident', 'Pressured to choose between fitting in and their familiar self', 'Indifferent to cultural differences', 'Excited by the differences around them'], answer: 1 },
+      { type: 'mcq', q: 'What did the grandmother do during the festival evening?', options: ['Cooked traditional food', 'Told stories she heard from her own parents while arranging lamps', 'Taught the writer a traditional song', 'Showed old photographs'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer now see change in relation to identity?', options: ['As a threat to their original self', 'As betrayal of roots', 'As adding new chapters without tearing out old ones', 'As something to be avoided'], answer: 2 },
+      { type: 'mcq', q: 'What is the central insight about identity?', options: ['It is fixed by childhood', 'It is a mixture that keeps expanding', 'It must be chosen between two cultures', 'It is shaped only by family traditions'], answer: 1 },
+      { type: 'mcq', q: 'How did the writer feel earlier about cultural identity?', options: ['Proud and confident', 'Pressured to choose between fitting in and their familiar self', 'Indifferent to cultural differences', 'Excited by differences around them'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T5-V4': {
     topic: 'Culture and Identity',
-    text: `I grew up code-switching without realizing that's what it was — one version of me at home, another in classrooms, another online. It took years to notice how tiring that translation is. There was a moment at a family function where someone commented on how "modern" I'd become, said kindly but landing like an accusation, and I remember feeling caught between two versions of myself with no idea which one was real. I don't think identity is something you arrive at once and keep. It keeps shifting, shaped by where I am and who's watching, and I've stopped feeling guilty. I still cook the food I grew up with and still argue with older relatives about things I believe in now that I didn't used to. Both feel true. Culture, for me, isn't a costume I put on for festivals — it's the way I argue, love, and grieve, inherited whether I chose it or not. I'm figuring out which parts I want to keep on purpose instead of by default, and which ones I'm ready to let go of quietly. That process feels less like a crisis now and more like just growing up in public.`,
+    text: `I grew up code-switching without realizing that is what it was. One version of me at home, another in classrooms, another online. It took years to notice how tiring that translation is. There was a moment at a family function where someone commented on how modern I had become, said kindly but landing like an accusation, and I remember feeling caught between two versions of myself with no idea which one was real. I do not think identity is something you arrive at once and keep. It keeps shifting, shaped by where I am and who is watching, and I have stopped feeling guilty. I still cook the food I grew up with and still argue with older relatives about things I believe in now that I did not used to. Both feel true. Culture for me is not a costume I put on for festivals. It is the way I argue, love, and grieve, inherited whether I chose it or not. I am figuring out which parts I want to keep on purpose instead of by default.`,
     questions: [
-      { type: 'mcq', q: 'What comment at a family function stayed with the writer?', options: ['That they had forgotten their roots entirely', 'That they had become "modern", said kindly but landing like an accusation', 'That they should come home more often', 'That their career choice was unexpected'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer describe culture in relation to themselves?', options: ['A costume put on for festivals', 'Something completely left behind as they grew up', 'The way they argue, love, and grieve — inherited whether chosen or not', 'A set of rules imposed by family'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main reflection on identity?', options: ['It is fixed at birth', 'It is something you choose once and keep', 'It keeps shifting and that\'s okay', 'It should match one culture completely'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer relates to code-switching?', options: ['They find it effortless and natural', 'They realized it was exhausting only after years', 'They actively chose to do it', 'They stopped doing it entirely'], answer: 1 },
+      { type: 'mcq', q: 'What comment at a family function stayed with the writer?', options: ['That they had forgotten their roots', 'That they had become modern, said kindly but landing like an accusation', 'That they should come home more often', 'That their career choice was unexpected'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer describe culture in relation to themselves?', options: ['A costume put on for festivals', 'Something left behind as they grew up', 'The way they argue, love, and grieve — inherited whether chosen or not', 'A set of rules imposed by family'], answer: 2 },
+      { type: 'mcq', q: 'What is the main reflection on identity?', options: ['It is fixed at birth', 'It is chosen once and kept', 'It keeps shifting and that is okay', 'It should match one culture completely'], answer: 2 },
+      { type: 'mcq', q: 'What can you infer about code-switching?', options: ['They find it effortless', 'They realized it was exhausting only after years', 'They actively chose to do it', 'They stopped doing it entirely'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T5-V5': {
     topic: 'Culture and Identity',
-    text: `Growing up, my identity felt like a sweater that never quite fit right, always pulling uncomfortably at the seams. Straddling two distinct cultures meant I was constantly code-switching, altering my voice, my food, and my expressions depending on whose living room I was standing in. I felt like an imposter in both worlds, never entirely traditional enough for my family, yet always slightly too different for my peers. Last month, during a holiday dinner, I watched my grandmother cook while my friends texted me jokes on my phone. Instead of feeling pulled apart by the contrast, I suddenly felt a strange, deep sense of peace. I realized that identity isn't a strict test of purity or an all-or-nothing equation. My culture isn't a set of rigid rules I have to perform perfectly; it is a rich, living tapestry woven from everything I inherit and everything I choose to create. I am the bridge between these worlds, not the space between them. Embracing that complexity feels like finally stepping into clothes that were custom-made for me.`,
+    text: `Growing up, my identity felt like a sweater that never quite fit right, always pulling uncomfortably at the seams. Straddling two distinct cultures meant I was constantly code-switching, altering my voice, my food, and my expressions depending on whose living room I was standing in. I felt like an imposter in both worlds, never entirely traditional enough for my family, yet always slightly too different for my peers. Last month, during a holiday dinner, I watched my grandmother cook while my friends texted me jokes on my phone. Instead of feeling pulled apart by the contrast, I suddenly felt a strange deep sense of peace. I realized that identity is not a strict test of purity or an all-or-nothing equation. My culture is not a set of rigid rules I have to perform perfectly. It is a rich living tapestry woven from everything I inherit and everything I choose to create. I am the bridge between these worlds, not the space between them.`,
     questions: [
-      { type: 'mcq', q: 'What metaphor does the writer use to describe their identity growing up?', options: ['A river with two currents', 'A sweater that never quite fit right', 'A bridge connecting two cities', 'A mirror reflecting two images'], answer: 1 },
-      { type: 'mcq', q: 'What happened during the holiday dinner that shifted the writer\'s perspective?', options: ['A meaningful conversation with their grandmother', 'Watching their grandmother cook while friends texted them brought an unexpected sense of peace', 'A family argument that resolved peacefully', 'Sharing food from both cultures at the same table'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer redefine their cultural identity by the end?', options: ['As something to be abandoned in favour of fitting in', 'As a strict test of purity they must pass', 'As a rich tapestry of inherited and chosen elements', 'As something permanently fixed by childhood'], answer: 2 },
-      { type: 'mcq', q: 'How did the writer feel before finding this sense of peace?', options: ['Proud of their dual identity', 'Like an imposter in both worlds', 'Excited by the differences around them', 'Confused but unbothered'], answer: 1 },
+      { type: 'mcq', q: 'What metaphor does the writer use to describe identity growing up?', options: ['A river with two currents', 'A sweater that never quite fit right', 'A bridge connecting two cities', 'A mirror reflecting two images'], answer: 1 },
+      { type: 'mcq', q: 'What shifted during the holiday dinner?', options: ['A meaningful conversation with grandmother', 'Watching grandmother cook while friends texted brought unexpected peace', 'A family argument that resolved', 'Sharing food from both cultures'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer redefine cultural identity by the end?', options: ['Something to abandon to fit in', 'A strict test of purity', 'A tapestry of inherited and chosen elements', 'Something permanently fixed by childhood'], answer: 2 },
+      { type: 'mcq', q: 'How did the writer feel before finding peace?', options: ['Proud of dual identity', 'Like an imposter in both worlds', 'Excited by differences around them', 'Confused but unbothered'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T6-V3': {
     topic: 'Academic Life and Student Struggles',
-    text: `Student life often looks exciting from the outside, but most days are filled with invisible battles. Deadlines arrive together, assignments multiply unexpectedly, and self-doubt appears whenever I compare myself with classmates. I remember staying awake until three in the morning before an important exam, surrounded by highlighted notes and empty coffee mugs. By sunrise, I could barely remember what I had studied. That experience taught me that exhaustion is not the same as productivity. I still procrastinate sometimes, especially when a task feels overwhelming. Breaking work into smaller pieces has helped more than waiting for motivation. College has also shown me that grades matter, but they do not capture curiosity, creativity, or resilience. Some of my biggest lessons came from projects that failed before finally working. Every difficult semester has forced me to become more patient with myself. I am slowly learning that asking questions is not embarrassing and needing help is not weakness. Education feels less like collecting marks now and more like discovering how I think, adapt, recover, and continue moving forward despite uncertainty.`,
+    text: `Student life often looks exciting from the outside, but most days are filled with invisible battles. Deadlines arrive together, assignments multiply unexpectedly, and self-doubt appears whenever I compare myself with classmates. I remember staying awake until three in the morning before an important exam, surrounded by highlighted notes and empty coffee mugs. By sunrise, I could barely remember what I had studied. That experience taught me that exhaustion is not the same as productivity. I still procrastinate sometimes, especially when a task feels overwhelming. Breaking work into smaller pieces has helped more than waiting for motivation. College has also shown me that grades matter, but they do not capture curiosity, creativity, or resilience. Some of my biggest lessons came from projects that failed before finally working. Every difficult semester has forced me to become more patient with myself. I am slowly learning that asking questions is not embarrassing and needing help is not weakness.`,
     questions: [
-      { type: 'mcq', q: 'What did the writer realize after staying up until 3am before an exam?', options: ['That all-nighters always work if you push through', 'That exhaustion is not the same as productivity', 'That coffee is the best study aid', 'That they needed to start studying earlier next time'], answer: 1 },
-      { type: 'mcq', q: 'What strategy helped the writer most with procrastination?', options: ['Waiting until motivation arrived naturally', 'Setting strict timers for study sessions', 'Breaking work into smaller pieces', 'Studying in groups'], answer: 2 },
-      { type: 'mcq', q: 'How has the writer\'s view of education changed?', options: ['From seeing it as collecting marks to discovering how they think and adapt', 'From loving it to resenting it', 'From being motivated to being indifferent', 'From valuing creativity to focusing on grades'], answer: 0 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with failure?', options: ['They avoid difficult projects to prevent it', 'They see it as the end of their efforts', 'Their biggest lessons came from projects that failed before working', 'They are indifferent to it'], answer: 2 },
+      { type: 'mcq', q: 'What did the writer realize after staying up until 3am?', options: ['All-nighters always work if you push through', 'Exhaustion is not the same as productivity', 'Coffee is the best study aid', 'They needed to start studying earlier'], answer: 1 },
+      { type: 'mcq', q: 'What strategy helped most with procrastination?', options: ['Waiting until motivation arrived', 'Setting strict timers', 'Breaking work into smaller pieces', 'Studying in groups'], answer: 2 },
+      { type: 'mcq', q: 'How has the view of education changed?', options: ['From seeing it as collecting marks to discovering how they think and adapt', 'From loving it to resenting it', 'From being motivated to being indifferent', 'From valuing creativity to focusing on grades'], answer: 0 },
+      { type: 'mcq', q: 'What can you infer about the writer and failure?', options: ['They avoid difficult projects', 'They see failure as the end', 'Their biggest lessons came from projects that failed before working', 'They are indifferent to it'], answer: 2 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T6-V4': {
     topic: 'Academic Life and Student Struggles',
-    text: `Nobody warns you that college stress doesn't feel like exam pressure — it feels like a low hum that never fully turns off. I remember pulling an all-nighter for an assignment, finishing at 6am, feeling proud for four minutes before dreading the next deadline already stacking up behind it. There's this pressure to be simultaneously excelling academically, building a portfolio, networking, and somehow also having a personality outside of all that, and most days it feels like there aren't enough hours to go around. I've had weeks where I aced something I studied for and still felt like a fraud, waiting to be exposed. What's helped isn't some clean fix — it's lowering the bar on my own expectations without lowering my effort, learning that resting isn't the same as quitting. I still compare my pace to classmates who seem to have it together, forgetting I'm only seeing their highlight reel. Academic life has stopped being about proving I'm smart and started being about figuring out how to keep going without burning out completely, one deadline at a time.`,
+    text: `Nobody warns you that college stress does not feel like exam pressure. It feels like a low hum that never fully turns off. I remember pulling an all-nighter for an assignment, finishing at 6am, feeling proud for four minutes before dreading the next deadline already stacking up behind it. There is this pressure to be simultaneously excelling academically, building a portfolio, networking, and somehow also having a personality outside of all that, and most days it feels like there are not enough hours to go around. I have had weeks where I aced something I studied for and still felt like a fraud, waiting to be exposed. What has helped is not some clean fix. It is lowering the bar on my own expectations without lowering my effort, learning that resting is not the same as quitting. I still compare my pace to classmates who seem to have it together, forgetting I am only seeing their highlight reel.`,
     questions: [
       { type: 'mcq', q: 'How does the writer describe college stress?', options: ['Like an exam that never ends', 'Like a low hum that never fully turns off', 'Like a sudden storm', 'Like carrying a heavy backpack'], answer: 1 },
-      { type: 'mcq', q: 'What happened after the writer finished their all-nighter at 6am?', options: ['They slept for eight hours straight', 'They felt proud for four minutes before dreading the next deadline', 'They celebrated with friends', 'They submitted and forgot about it'], answer: 1 },
-      { type: 'mcq', q: 'What has actually helped the writer manage academic pressure?', options: ['Strict scheduling and no breaks', 'Lowering their bar on expectations without lowering effort, and learning rest isn\'t quitting', 'Comparing themselves to top students for motivation', 'Taking breaks from studying completely'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer views their classmates who seem to have it together?', options: ['They genuinely admire and try to copy them', 'They know they\'re only seeing a highlight reel', 'They feel angry at the comparison', 'They believe those students have an unfair advantage'], answer: 1 },
+      { type: 'mcq', q: 'What happened after finishing the all-nighter at 6am?', options: ['They slept for eight hours', 'They felt proud for four minutes before dreading the next deadline', 'They celebrated with friends', 'They submitted and forgot about it'], answer: 1 },
+      { type: 'mcq', q: 'What has actually helped manage academic pressure?', options: ['Strict scheduling', 'Lowering expectations without lowering effort, and learning rest is not quitting', 'Comparing to top students for motivation', 'Taking complete breaks from studying'], answer: 1 },
+      { type: 'mcq', q: 'How does the writer view classmates who seem to have it together?', options: ['They admire and copy them', 'They know they are only seeing a highlight reel', 'They feel angry at the comparison', 'They believe those students have an unfair advantage'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   },
   'T6-V5': {
     topic: 'Academic Life and Student Struggles',
-    text: `The library clock read 3:00 AM, and the text in my textbook had dissolved into a blurry, incomprehensible smudge. I was surrounded by empty paper coffee cups and crumpled highlighters, crying tears of sheer frustration over a practice exam score. In that dark hour, my entire self-worth felt entirely tied to a decimal point on a GPA spreadsheet. The pressure to excel, to compete, and to constantly justify my presence in higher education had turned learning from a joy into a frantic, exhausting survival sport. It took failing a major quiz the next week to finally break that dangerous spell. The world didn't end when the red ink hit my paper. I took a deep breath, walked outside, and realized the trees were still green and I was still fundamentally whole. Academic struggle is real, and it is deeply exhausting, but it is not a final verdict on our intelligence or our human value. We are so much larger than our grades, our test scores, or the institutional anxieties we carry.`,
+    text: `The library clock read 3am, and the text in my textbook had dissolved into a blurry incomprehensible smudge. I was surrounded by empty paper coffee cups and crumpled highlighters, crying tears of sheer frustration over a practice exam score. In that dark hour, my entire self-worth felt entirely tied to a decimal point on a GPA spreadsheet. The pressure to excel, to compete, and to constantly justify my presence in higher education had turned learning from a joy into a frantic exhausting survival sport. It took failing a major quiz the next week to finally break that dangerous spell. The world did not end when the red ink hit my paper. I took a deep breath, walked outside, and realized the trees were still green and I was still fundamentally whole. Academic struggle is real and it is deeply exhausting, but it is not a final verdict on our intelligence or our human value.`,
     questions: [
-      { type: 'mcq', q: 'What time was it when the writer was in the library?', options: ['Midnight', '1:00 AM', '3:00 AM', '5:00 AM'], answer: 2 },
-      { type: 'mcq', q: 'What finally broke the writer\'s spell of tying self-worth to grades?', options: ['A conversation with a professor', 'Getting a top grade after weeks of work', 'Failing a major quiz and realizing the world didn\'t end', 'Taking a week off from studying'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central message about academic struggle?', options: ['It builds character and is worth it', 'It is a final verdict on your intelligence', 'It is real but not a measure of our intelligence or human value', 'It should be avoided by studying smarter'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with academic performance before this experience?', options: ['They were always indifferent to grades', 'Their entire self-worth was tied to their GPA', 'They had a healthy balance between grades and wellbeing', 'They never compared themselves to classmates'], answer: 1 },
+      { type: 'mcq', q: 'What time was it in the library?', options: ['Midnight', '1am', '3am', '5am'], answer: 2 },
+      { type: 'mcq', q: 'What finally broke the spell of tying self-worth to grades?', options: ['A conversation with a professor', 'Getting a top grade after weeks of work', 'Failing a major quiz and realizing the world did not end', 'Taking a week off from studying'], answer: 2 },
+      { type: 'mcq', q: 'What is the central message about academic struggle?', options: ['It builds character and is worth it', 'It is a final verdict on your intelligence', 'It is real but not a measure of intelligence or human value', 'It should be avoided by studying smarter'], answer: 2 },
+      { type: 'mcq', q: 'What can you infer about the writer before this experience?', options: ['They were always indifferent to grades', 'Their entire self-worth was tied to their GPA', 'They had a healthy balance between grades and wellbeing', 'They never compared themselves to classmates'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
   }
 };
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 let participantId = '';
 let assignedPassages = [];
 let currentPassageIndex = 0;
 let gazeData = {};
 let readingStartTime = null;
-let allResponses = [];
-
-// ── WebGazer state ──
 let gazePoints = [];
 let gazeInterval = null;
 let webgazerReady = false;
+let quizAnswers = {}; // per-question answers for the active passage
 
-// ── WebGazer helpers ──
-function startGazeTracking(passageId) {
+// ═══════════════════════════════════════
+// WEBGAZER
+// ═══════════════════════════════════════
+function startGazeTracking(pid) {
   gazePoints = [];
   if (!webgazerReady) return;
   gazeInterval = setInterval(() => {
-    const pred = webgazer.getCurrentPrediction();
-    if (pred) gazePoints.push({ x: pred.x, y: pred.y, t: Date.now() });
+    if (typeof webgazer !== 'undefined') {
+      webgazer.getCurrentPrediction().then(pred => {
+        if (pred) gazePoints.push({ x: pred.x, y: pred.y, t: Date.now() });
+      });
+    }
   }, 100);
 }
 
-function stopGazeTracking(passageId) {
+function stopGazeTracking(pid) {
   if (gazeInterval) { clearInterval(gazeInterval); gazeInterval = null; }
-  if (gazePoints.length === 0) {
-    gazeData[passageId] = { fixationDuration: 0, regressionCount: 0, readingSpeed: 0 };
+  if (gazePoints.length < 2) {
+    const elapsed = (Date.now() - readingStartTime) / 1000;
+    const wc = PASSAGES[pid] ? PASSAGES[pid].text.split(' ').length : 200;
+    gazeData[pid] = {
+      fixationDuration: parseFloat((elapsed / wc * 1000).toFixed(1)),
+      regressionCount: 0,
+      readingSpeed: Math.round(wc / (elapsed / 60))
+    };
     return;
   }
-
-  // fixation duration: average time between gaze points (proxy for dwell time)
-  const totalDuration = (gazePoints[gazePoints.length-1].t - gazePoints[0].t) / 1000;
-  const wordCount = PASSAGES[passageId] ? PASSAGES[passageId].text.split(' ').length : 200;
-  const fixDur = parseFloat((totalDuration / gazePoints.length * 1000).toFixed(1));
-
-  // regression count: count how many times x-position moves significantly leftward
+  const elapsed = (gazePoints[gazePoints.length-1].t - gazePoints[0].t) / 1000;
+  const wc = PASSAGES[pid] ? PASSAGES[pid].text.split(' ').length : 200;
   let regressions = 0;
   for (let i = 1; i < gazePoints.length; i++) {
     if (gazePoints[i].x < gazePoints[i-1].x - 50) regressions++;
   }
-
-  // reading speed: words per minute
-  const speed = totalDuration > 0 ? Math.round(wordCount / (totalDuration / 60)) : 0;
-
-  gazeData[passageId] = {
-    fixationDuration: fixDur,
+  gazeData[pid] = {
+    fixationDuration: parseFloat((elapsed / gazePoints.length * 1000).toFixed(1)),
     regressionCount: regressions,
-    readingSpeed: speed
+    readingSpeed: elapsed > 0 ? Math.round(wc / (elapsed / 60)) : 0
   };
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // SCREEN HELPERS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // LOGIN
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 function fetchJsonp(url) {
   return new Promise((resolve, reject) => {
-    const cb = "cb_" + Math.random().toString(36).slice(2);
-    const s = document.createElement("script");
-    const t = setTimeout(() => { delete window[cb]; document.body.removeChild(s); reject(new Error("timeout")); }, 10000);
+    const cb = 'cb_' + Math.random().toString(36).slice(2);
+    const s = document.createElement('script');
+    const t = setTimeout(() => { delete window[cb]; document.body.removeChild(s); reject(new Error('timeout')); }, 10000);
     window[cb] = (d) => { clearTimeout(t); delete window[cb]; document.body.removeChild(s); resolve(d); };
-    s.src = url + "&callback=" + cb;
-    s.onerror = () => { clearTimeout(t); reject(new Error("error")); };
+    s.src = url + '&callback=' + cb;
+    s.onerror = () => { clearTimeout(t); reject(new Error('error')); };
     document.body.appendChild(s);
   });
 }
 
 async function handleLogin() {
-  const pid = document.getElementById("pid-input").value.trim().toUpperCase();
-  const errEl = document.getElementById("login-error");
-  errEl.style.display = "none";
-  if (!pid) { errEl.textContent = "Please enter your Participant ID."; errEl.style.display = "block"; return; }
-  const btn = document.querySelector("#screen-login .btn-primary");
+  const pid = document.getElementById('pid-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  if (!pid) { errEl.textContent = 'Please enter your Participant ID.'; errEl.style.display = 'block'; return; }
+  const btn = document.querySelector('#screen-login .btn-primary');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Looking you up...';
   try {
-    const data = await fetchJsonp(SHEET_URL + "?participantId=" + pid);
+    const data = await fetchJsonp(SHEET_URL + '?participantId=' + pid);
     if (data.error) {
-      errEl.textContent = "Participant ID not found. Please check and try again.";
-      errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
+      errEl.textContent = 'Participant ID not found. Please check and try again.';
+      errEl.style.display = 'block'; btn.disabled = false; btn.innerHTML = 'Continue →'; return;
     }
     participantId = pid;
     assignedPassages = data.passages.filter(p => PASSAGES[p]);
     if (assignedPassages.length === 0) {
-      errEl.textContent = "No passages assigned yet. Please contact the researcher.";
-      errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
+      errEl.textContent = 'No passages found for your ID. Please contact the researcher.';
+      errEl.style.display = 'block'; btn.disabled = false; btn.innerHTML = 'Continue →'; return;
     }
-    showScreen("screen-instructions");
+    showScreen('screen-instructions');
   } catch(e) {
-    errEl.textContent = "Connection error. Please check your internet and try again.";
-    errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →";
+    errEl.textContent = 'Connection error. Please check your internet and try again.';
+    errEl.style.display = 'block'; btn.disabled = false; btn.innerHTML = 'Continue →';
   }
 }
 
-document.getElementById('pid-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') handleLogin();
-});
+document.getElementById('pid-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CALIBRATION
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 let calibClicked = 0;
 
-function startCalibration() {
-  showScreen('screen-calibration');
+function buildCalibGrid() {
   const grid = document.getElementById('calib-grid');
   grid.innerHTML = '';
-  calibClicked = 0;
-
-  // init webgazer
-  if (typeof webgazer !== 'undefined') {
-    webgazer.setGazeListener(() => {}).begin().then(() => {
-      webgazer.showVideoPreview(true).showPredictionPoints(false).applyKalmanFilter(true);
-      webgazerReady = true;
-    }).catch(err => {
-      console.warn('WebGazer init failed:', err);
-      webgazerReady = false;
-    });
-  }
-
   for (let i = 0; i < 9; i++) {
     const dot = document.createElement('div');
     dot.className = 'calib-dot';
-    dot.addEventListener('click', function() {
-      if (!this.classList.contains('done')) {
-        this.classList.add('done');
-        calibClicked++;
-        document.getElementById('calib-status').textContent = `${calibClicked} of 9 dots clicked`;
-        if (calibClicked === 9) {
-          document.getElementById('calib-next-btn').disabled = false;
-          document.getElementById('calib-status').textContent = 'All done! You\'re ready to begin.';
-          document.getElementById('calib-status').style.color = 'var(--success)';
-        }
-      }
-    });
+    dot.dataset.index = i;
+    dot.addEventListener('click', onCalibDotClick);
     grid.appendChild(dot);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// READING
-// ═══════════════════════════════════════════════════════════
-function startStudy() {
-  // hide webgazer video box during actual study
-  if (typeof webgazer !== 'undefined') {
-    webgazer.showVideoPreview(false).showPredictionPoints(false);
+function onCalibDotClick(e) {
+  const dot = e.currentTarget;
+  if (dot.classList.contains('done')) return;
+  dot.classList.add('done');
+  calibClicked++;
+
+  // Feed the click into WebGazer as a calibration point, if available
+  if (typeof webgazer !== 'undefined' && webgazer.params) {
+    try {
+      const rect = dot.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      webgazer.recordScreenPosition(x, y, 'click');
+    } catch (err) { /* non-fatal if webgazer isn't fully ready */ }
   }
+
+  document.getElementById('calib-status').textContent = calibClicked + ' of 9 dots clicked';
+  if (calibClicked >= 9) {
+    document.getElementById('calib-next-btn').disabled = false;
+  }
+}
+
+function startCalibration() {
+  showScreen('screen-calibration');
+  buildCalibGrid();
+
+  // Try to initialize webgazer with the webcam
+  const tryInit = () => {
+    if (typeof webgazer === 'undefined') {
+      setTimeout(tryInit, 300);
+      return;
+    }
+    try {
+      webgazer.setRegression('ridge')
+        .setGazeListener(function(data, elapsedTime) { /* live listener not needed here */ })
+        .saveDataAcrossSessions(false)
+        .begin()
+        .then(() => {
+          webgazerReady = true;
+          webgazer.showVideoPreview(false);
+          webgazer.showPredictionPoints(false);
+        })
+        .catch(() => { webgazerReady = false; });
+    } catch (err) {
+      webgazerReady = false;
+    }
+  };
+  tryInit();
+}
+
+// ═══════════════════════════════════════
+// STUDY FLOW
+// ═══════════════════════════════════════
+function startStudy() {
   currentPassageIndex = 0;
   showPassage();
 }
@@ -899,151 +601,158 @@ function startStudy() {
 function showPassage() {
   const pid = assignedPassages[currentPassageIndex];
   const passage = PASSAGES[pid];
-  const total = assignedPassages.length;
-  const current = currentPassageIndex + 1;
-
-  document.getElementById('reading-progress-label').textContent = `Passage ${current} of ${total}`;
-  document.getElementById('reading-progress-bar').style.width = `${((current - 1) / total) * 100}%`;
   document.getElementById('passage-topic').textContent = passage.topic;
   document.getElementById('passage-text').textContent = passage.text;
-
-  readingStartTime = Date.now();
-  gazeData[pid] = { fixationDuration: 0, regressionCount: 0, readingSpeed: 0 };
-
+  document.getElementById('reading-progress-label').textContent =
+    'Passage ' + (currentPassageIndex + 1) + ' of ' + assignedPassages.length;
+  document.getElementById('reading-progress-bar').style.width =
+    Math.round((currentPassageIndex / assignedPassages.length) * 100) + '%';
   showScreen('screen-reading');
-  setTimeout(() => startGazeTracking(pid), 500);
+  readingStartTime = Date.now();
+  startGazeTracking(pid);
 }
 
 function doneReading() {
   const pid = assignedPassages[currentPassageIndex];
   stopGazeTracking(pid);
-
-  // fallback: if webgazer didn't work, approximate from timing
-  if (gazeData[pid].readingSpeed === 0) {
-    const elapsed = (Date.now() - readingStartTime) / 1000;
-    const wordCount = PASSAGES[pid].text.split(' ').length;
-    gazeData[pid].readingSpeed = Math.round(wordCount / (elapsed / 60));
-    gazeData[pid].fixationDuration = parseFloat((elapsed / wordCount * 1000).toFixed(1));
-    gazeData[pid].regressionCount = Math.max(0, Math.round((elapsed - (wordCount / 200 * 60)) * 0.5));
-  }
-
   showQuiz();
 }
 
-// ═══════════════════════════════════════════════════════════
-// QUIZ
-// ═══════════════════════════════════════════════════════════
 function showQuiz() {
   const pid = assignedPassages[currentPassageIndex];
   const passage = PASSAGES[pid];
-  const total = assignedPassages.length;
-  const current = currentPassageIndex + 1;
-
-  document.getElementById('quiz-progress-label').textContent = `Questions for Passage ${current} of ${total}`;
-  document.getElementById('quiz-progress-bar').style.width = `${((current - 1) / total) * 100}%`;
+  quizAnswers = {};
+  document.getElementById('quiz-progress-label').textContent =
+    'Questions for Passage ' + (currentPassageIndex + 1) + ' of ' + assignedPassages.length;
+  document.getElementById('quiz-progress-bar').style.width =
+    Math.round(((currentPassageIndex + 1) / assignedPassages.length) * 100) + '%';
   document.getElementById('quiz-error').textContent = '';
 
   const container = document.getElementById('quiz-questions');
   container.innerHTML = '';
 
-  passage.questions.forEach((q, qi) => {
-    const div = document.createElement('div');
-    div.className = 'quiz-q';
+  passage.questions.forEach((qObj, qIndex) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-q';
 
     const qText = document.createElement('div');
     qText.className = 'quiz-q-text';
-    qText.textContent = `Q${qi + 1}. ${q.q}`;
-    div.appendChild(qText);
+    qText.textContent = (qIndex + 1) + '. ' + qObj.q;
+    qDiv.appendChild(qText);
 
-    if (q.type === 'mcq') {
-      q.options.forEach((opt, oi) => {
+    if (qObj.type === 'mcq') {
+      qObj.options.forEach((opt, optIndex) => {
         const label = document.createElement('label');
         label.className = 'quiz-option';
-        label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}"> ${opt}`;
+        label.innerHTML =
+          '<input type="radio" name="q' + qIndex + '" value="' + optIndex + '"> <span>' + opt + '</span>';
         label.querySelector('input').addEventListener('change', () => {
-          document.querySelectorAll(`[name="q${qi}"]`).forEach(r => r.closest('label').classList.remove('selected'));
+          qDiv.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
           label.classList.add('selected');
+          quizAnswers[qIndex] = opt;
         });
-        div.appendChild(label);
+        qDiv.appendChild(label);
       });
     } else {
       const ta = document.createElement('textarea');
-      ta.id = `open-q${qi}`;
-      ta.placeholder = 'Write your answer here...';
-      div.appendChild(ta);
+      ta.placeholder = 'Type your answer here...';
+      ta.addEventListener('input', () => { quizAnswers[qIndex] = ta.value.trim(); });
+      qDiv.appendChild(ta);
     }
 
-    container.appendChild(div);
+    container.appendChild(qDiv);
   });
 
   showScreen('screen-quiz');
 }
 
-async function submitQuiz() {
+function submitQuiz() {
   const pid = assignedPassages[currentPassageIndex];
   const passage = PASSAGES[pid];
   const errEl = document.getElementById('quiz-error');
+
+  // Validate all questions answered
+  for (let i = 0; i < passage.questions.length; i++) {
+    if (!quizAnswers[i] || quizAnswers[i].length === 0) {
+      errEl.textContent = 'Please answer all questions before continuing.';
+      return;
+    }
+  }
   errEl.textContent = '';
 
-  const answers = {};
-  let allAnswered = true;
-
-  passage.questions.forEach((q, qi) => {
-    if (q.type === 'mcq') {
-      const selected = document.querySelector(`input[name="q${qi}"]:checked`);
-      if (!selected) { allAnswered = false; } else { answers[`q${qi + 1}`] = parseInt(selected.value); }
-    } else {
-      const val = document.getElementById(`open-q${qi}`).value.trim();
-      if (!val) { allAnswered = false; } else { answers[`q${qi + 1}`] = val; }
+  // Score MCQs
+  let correct = 0;
+  let mcqCount = 0;
+  passage.questions.forEach((qObj, qIndex) => {
+    if (qObj.type === 'mcq') {
+      mcqCount++;
+      if (quizAnswers[qIndex] === qObj.options[qObj.answer]) correct++;
     }
   });
+  const comprehensionScore = mcqCount > 0 ? Math.round((correct / mcqCount) * 100) : null;
 
-  if (!allAnswered) {
-    errEl.textContent = 'Please answer all questions before continuing.';
-    return;
-  }
+  const gd = gazeData[pid] || { fixationDuration: '', regressionCount: '', readingSpeed: '' };
 
-  // calculate comprehension score
-  let score = 0;
-  passage.questions.forEach((q, qi) => {
-    if (q.type === 'mcq' && answers[`q${qi + 1}`] === q.answer) score += 1;
-    if (q.type === 'open' && answers[`q${qi + 1}`].length > 10) score += 2;
-  });
-
-  const response = {
+  submitToGoogleForm({
     participantId,
     passageId: pid,
-    q1: answers.q1 ?? '',
-    q2: answers.q2 ?? '',
-    q3: answers.q3 ?? '',
-    q4: answers.q4 ?? '',
-    q5: answers.q5 ?? '',
-    fixationDuration: gazeData[pid].fixationDuration,
-    regressionCount: gazeData[pid].regressionCount,
-    readingSpeed: gazeData[pid].readingSpeed,
-    comprehensionScore: score
-  };
+    q1: quizAnswers[0] || '',
+    q2: quizAnswers[1] || '',
+    q3: quizAnswers[2] || '',
+    q4: quizAnswers[3] || '',
+    q5: quizAnswers[4] || '',
+    fixationDuration: gd.fixationDuration,
+    regressionCount: gd.regressionCount,
+    readingSpeed: gd.readingSpeed,
+    comprehensionScore
+  });
 
-  allResponses.push(response);
+  const btn = document.getElementById('quiz-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Saving...';
 
-  // save to Google Sheets
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = 'Submit and Continue →';
+    currentPassageIndex++;
+    if (currentPassageIndex >= assignedPassages.length) {
+      finishStudy();
+    } else {
+      showPassage();
+    }
+  }, 500);
+}
+
+function submitToGoogleForm(payload) {
   try {
-    await fetch(SHEET_URL, {
-      method: 'POST',
-      body: JSON.stringify(response),
-      headers: { 'Content-Type': 'application/json' }
+    const form = document.createElement('form');
+    form.action = FORM_ACTION;
+    form.method = 'POST';
+    form.target = 'hidden-form-target';
+    form.style.display = 'none';
+
+    Object.keys(FORM_FIELDS).forEach(key => {
+      if (payload[key] === undefined) return;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = FORM_FIELDS[key];
+      input.value = payload[key];
+      form.appendChild(input);
     });
-  } catch (e) {
-    console.warn('Save failed, continuing anyway:', e);
-  }
 
-  currentPassageIndex++;
-
-  if (currentPassageIndex < assignedPassages.length) {
-    showPassage();
-  } else {
-    showScreen('screen-thankyou');
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(() => document.body.removeChild(form), 1000);
+  } catch (err) {
+    console.error('Form submission failed', err);
   }
+}
+
+function finishStudy() {
+  if (typeof webgazer !== 'undefined' && webgazerReady) {
+    try { webgazer.end(); } catch (err) { /* non-fatal */ }
+  }
+  showScreen('screen-thankyou');
 }
 </script>
 </body>
