@@ -162,7 +162,7 @@
 // ═══════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyr2_dPenygVM2qZHIbxS8Bac3RfzYiUEf4XveyXQGYSRq21kPjs8-BwMbQIhXzwrQH/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwHV5xOqdWqSmf1CMhKsz3qbIL1-xv3QMZxz-3VtBNXP2Mlh6XyVqNo1FfRzdd7VwZo/exec';
 
 // Google Form field IDs (from pre-filled link)
 const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSf-DwU2GhCAXVUwBBYDXuz3vz50nchGjvwIStXE8ciAE9lB4A/formResponse';
@@ -693,7 +693,7 @@ function submitQuiz() {
 
   const gd = gazeData[pid] || { fixationDuration: '', regressionCount: '', readingSpeed: '' };
 
-  submitToGoogleForm({
+  const payload = {
     participantId,
     passageId: pid,
     q1: quizAnswers[0] || '',
@@ -705,47 +705,47 @@ function submitQuiz() {
     regressionCount: gd.regressionCount,
     readingSpeed: gd.readingSpeed,
     comprehensionScore
-  });
+  };
 
   const btn = document.getElementById('quiz-submit-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Saving...';
 
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.innerHTML = 'Submit and Continue →';
-    currentPassageIndex++;
-    if (currentPassageIndex >= assignedPassages.length) {
-      finishStudy();
-    } else {
-      showPassage();
-    }
-  }, 500);
+  submitToSheet(payload)
+    .then(() => {
+      btn.disabled = false;
+      btn.innerHTML = 'Submit and Continue →';
+      currentPassageIndex++;
+      if (currentPassageIndex >= assignedPassages.length) {
+        finishStudy();
+      } else {
+        showPassage();
+      }
+    })
+    .catch(err => {
+      console.error('Save failed', err);
+      btn.disabled = false;
+      btn.innerHTML = 'Submit and Continue →';
+      errEl.textContent = 'Could not save your response. Please check your internet connection and try again.';
+    });
 }
 
-function submitToGoogleForm(payload) {
-  try {
-    const form = document.createElement('form');
-    form.action = FORM_ACTION;
-    form.method = 'POST';
-    form.target = 'hidden-form-target';
-    form.style.display = 'none';
-
-    Object.keys(FORM_FIELDS).forEach(key => {
-      if (payload[key] === undefined) return;
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = FORM_FIELDS[key];
-      input.value = payload[key];
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(() => document.body.removeChild(form), 1000);
-  } catch (err) {
-    console.error('Form submission failed', err);
-  }
+function submitToSheet(payload) {
+  // Apps Script doPost does not send CORS headers back, so the browser will
+  // treat this as an "opaque" response with fetch's no-cors mode. That means
+  // we cannot read success/failure from the response itself — but the POST
+  // body IS delivered and doPost DOES run and append the row. We resolve
+  // after a short delay to give the request time to land, since we can't
+  // await a readable response.
+  return fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    // no-cors responses are opaque; treat the fetch not throwing as success
+    return true;
+  });
 }
 
 function finishStudy() {
