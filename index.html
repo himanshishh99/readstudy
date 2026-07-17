@@ -208,6 +208,17 @@
     background: var(--bg);
     border-radius: var(--radius);
     border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .quiz-q.missing {
+    border-color: #DC2626;
+    background: #FEF2F2;
+  }
+
+  .quiz-q-required {
+    color: #DC2626;
+    font-weight: 600;
   }
 
   .quiz-q-text {
@@ -334,6 +345,30 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── full-screen loading ── */
+  .loading-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  .spinner-lg {
+    width: 34px;
+    height: 34px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 20px;
+  }
+
+  .loading-center p {
+    margin-bottom: 0;
+  }
+
   /* ── calibration ── */
   .calib-dot {
     width: 20px;
@@ -397,6 +432,18 @@
     <button class="btn btn-primary" onclick="handleLogin()">
       Continue →
     </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 1.5: LOADING
+══════════════════════════════════════════════ -->
+<div class="screen" id="screen-loading">
+  <div class="card">
+    <div class="loading-center">
+      <div class="spinner-lg"></div>
+      <p id="loading-message">Setting up your reading materials...</p>
+    </div>
   </div>
 </div>
 
@@ -502,235 +549,1948 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxU9FOmxnfiJA-A5KdDgD
 // format: passageId: { topic, text, questions: [...] }
 // ═══════════════════════════════════════════════════════════
 const PASSAGES = {
-  'T1-V1': {
-    topic: 'Mental Health and Emotional Wellbeing',
-    text: `You don't just wake up with it one day. You don't just decide to have it. It is an overarching feeling for months or years before you identify it. It is the feeling of getting less excited about your favorite things. It is the feeling of wanting to stay in bed all day and not caring in the world. It's shutting out the world around you. The unread text messages, the declined calls, the messy room, and the piercing headache from having too many thoughts. Something that so many of us go through, not even knowing. Each day is pretend. Pretending to have joy for the day ahead, seeing the purpose that we have. Freshman year of high school, I woke every day and each new task felt like sinking deeper into a body of water that had no bottom. I stayed silent because I didn't know if I was the only one going through this. I stayed silent because I didn't want anyone to worry. I stayed silent because I was afraid.`,
-    questions: [
-      { type: 'mcq', q: 'What did the writer compare each daily task to in high school?', options: ['Running a race with no finish line', 'Sinking deeper into water with no bottom', 'Climbing a mountain alone', 'Carrying a heavy bag uphill'], answer: 1 },
-      { type: 'mcq', q: 'Why did the writer stay silent about what they were going through?', options: ['They didn\'t know what was wrong', 'They didn\'t want anyone to worry and were afraid', 'They thought it would go away on its own', 'They had no one to talk to'], answer: 1 },
-      { type: 'mcq', q: 'What is the main feeling this passage describes?', options: ['Excitement about growing up', 'The quiet, invisible weight of struggling mentally without telling anyone', 'Anger at people who didn\'t notice', 'Relief after asking for help'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer felt about their own experience?', options: ['Proud of how they handled it', 'Isolated and unsure if others felt the same', 'Angry and resentful', 'Indifferent and unbothered'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V1": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "You don't just wake up with it one day. You don't just decide to have it. It is an overarching feeling for months or years before you identify it. It is the feeling of getting less excited about your favorite things. It is the feeling of wanting to stay in bed all day and not caring in the world. It's shutting out the world around you. The unread text messages, the declined calls, the messy room, and the piercing headache from having too many thoughts. Something that so many of us go through, not even knowing. Each day is pretend. Pretending to have joy for the day ahead, seeing the purpose that we have. Freshman year of high school, I woke every day and each new task felt like sinking deeper into a body of water that had no bottom. I stayed silent because I didn't know if I was the only one going through this. I stayed silent because I didn't want anyone to worry. I stayed silent because I was afraid.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the writer compare each daily task to?",
+        "options": [
+          "Running a race",
+          "Sinking in water with no bottom",
+          "Climbing a mountain",
+          "Carrying a heavy bag"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "Why did the writer stay silent?",
+        "options": [
+          "Did not know what was wrong",
+          "Did not want anyone to worry and was afraid",
+          "Thought it would go away",
+          "Had no one to talk to"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main feeling this passage describes?",
+        "options": [
+          "Excitement about growing up",
+          "The quiet invisible weight of struggling mentally",
+          "Anger at people who did not notice",
+          "Relief after asking for help"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about how the writer felt?",
+        "options": [
+          "Proud of how they handled it",
+          "Isolated and unsure if others felt the same",
+          "Angry and resentful",
+          "Indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T1-V3': {
-    topic: 'Mental Health and Emotional Wellbeing',
-    text: `I used to think mental health was something other people talked about, until one ordinary Tuesday when I sat in my parked bus after college and realized I could not stop crying. Nothing dramatic had happened. Weeks of pressure, expectations, and pretending everything was fine had simply caught up. That afternoon changed how I treated myself. Instead of calling myself lazy, I started asking, "What do you need?" Sometimes the answer was sleep. Sometimes it was a walk without headphones. Sometimes it was texting a friend before disappearing. Healing has never looked impressive. It usually happens quietly, through tiny choices that nobody applauds. I still have difficult mornings, but they no longer convince me that I am failing. I keep a notebook beside my bed where I write one honest sentence every night, even if it says today felt heavy. Seeing those pages fill reminds me that difficult feelings pass, while I remain. That thought gives me enough courage to begin again the next morning with a little more patience and hope.`,
-    questions: [
-      { type: 'mcq', q: 'What habit did the writer start to help themselves?', options: ['Going for runs every morning', 'Writing one honest sentence in a notebook every night', 'Calling a therapist weekly', 'Meditating before sleep'], answer: 1 },
-      { type: 'mcq', q: 'What triggered the writer\'s realization on the Tuesday they mention?', options: ['A fight with a friend', 'A failed exam', 'Nothing dramatic — weeks of pressure had caught up', 'A difficult conversation with family'], answer: 2 },
-      { type: 'mcq', q: 'What is the central message of this passage?', options: ['Mental health problems need professional treatment', 'Healing is quiet, unglamorous, and happens through small daily choices', 'You should talk to friends about everything', 'Crying is a sign of weakness'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer seem to feel about mental health by the end of the passage?', options: ['Still confused and lost', 'More at peace, with a gentler relationship with themselves', 'Angry at how long it took', 'Indifferent'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V2": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "This morning, I woke up early for a work call. I walked out into my living room and was disappointed but unsurprised by what I found. I made dinner last night. Baked lemon-herb chicken, garlic bread, mesclun salad with fig balsamic dressing, and grilled artichokes. It is my ambition to cook on most nights, but lately, that goal has felt out of reach, just another unchecked box on my ever-expanding to-do list.\nMy husband washed his own plate, cup, and fork — a habit he began after I asked him not to leave his dishes for me after meals. I washed everything else, but, distracted by my chronic back pain that was flaring this weekend, I neglected to transfer the leftovers from the slow cooker to the fridge. This morning, it was still sitting in the slow cooker. I know he saw it because it was next to his mini-blender, and I heard him make himself a smoothie last night after I went to bed. After sitting out all night, the extra food is in the trash now.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Q1: What did the narrator make for dinner?",
+        "options": [
+          "Pasta",
+          "Lemon-herb chicken, garlic bread, salad, artichokes",
+          "Grilled salmon",
+          "Pizza"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What habit did the husband start?",
+        "options": [
+          "Cooking dinner",
+          "Washing his own plate, cup, fork",
+          "All chores",
+          "Making smoothies for both"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "he loves elaborate cooking",
+          "She's navigating uneven household labor while managing chronic pain",
+          "Husband refuses to help",
+          "Perfect division of chores"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about her feelings toward the leftovers situation?",
+        "options": [
+          "Indifferent",
+          "Quiet frustration/disappointment",
+          "Thrilled",
+          "Angry at herself"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about her husband noticing the leftovers?"
+      }
     ]
   },
-  'T1-V4': {
-    topic: 'Mental Health and Emotional Wellbeing',
-    text: `I used to think being "fine" meant not crying in public, so I got good at holding my face still on crowded metros while everything was on fire. It took until second semester to admit that pushing through wasn't the same as being okay. There was one Tuesday I sat on my hostel floor at 2am, not sad exactly, just empty, scrolling without reading anything. I didn't call anyone. I wish I had. What changed things wasn't some big breakthrough, it was small: sleeping on time, telling one friend the truth instead of "I'm just tired," letting myself take a day off without narrating it as laziness. I still have weeks where my brain feels like a browser with forty tabs open and I can't find the one making the noise. I've stopped treating that as failure. Emotional wellbeing isn't a fixed state you arrive at once and keep forever, it's more like ongoing maintenance, quiet and unglamorous, done mostly when no one's watching and there's no reward for it.`,
-    questions: [
-      { type: 'mcq', q: 'What does the writer compare their mental state to?', options: ['A storm about to break', 'A browser with forty tabs open', 'A phone with low battery', 'A broken clock'], answer: 1 },
-      { type: 'mcq', q: 'What did the writer wish they had done on the night they mention?', options: ['Gone for a walk', 'Called someone', 'Written in a journal', 'Gone to sleep earlier'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main point about emotional wellbeing?', options: ['It requires professional help', 'It\'s a permanent state you reach once', 'It\'s ongoing, quiet maintenance with no reward', 'It depends on other people'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with asking for help?', options: ['They find it easy and do it often', 'They struggled with it but are slowly learning', 'They believe it\'s unnecessary', 'They prefer professional help only'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V3": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "I used to think mental health was something other people talked about, until one ordinary Tuesday when I sat in my parked bus after college and realized I could not stop crying. Nothing dramatic had happened. Weeks of pressure, expectations, and pretending everything was fine had simply caught up. That afternoon changed how I treated myself. Instead of calling myself lazy, I started asking, what do you need? Sometimes the answer was sleep. Sometimes it was a walk without headphones. Sometimes it was texting a friend before disappearing. Healing has never looked impressive. It usually happens quietly, through tiny choices that nobody applauds. I still have difficult mornings, but they no longer convince me that I am failing. I keep a notebook beside my bed where I write one honest sentence every night, even if it says today felt heavy. Seeing those pages fill reminds me that difficult feelings pass, while I remain.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What habit did the writer start?",
+        "options": [
+          "Going for runs",
+          "Writing one honest sentence in a notebook every night",
+          "Calling a therapist weekly",
+          "Meditating before sleep"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What triggered the writer on that Tuesday?",
+        "options": [
+          "A fight with a friend",
+          "A failed exam",
+          "Nothing dramatic, weeks of pressure caught up",
+          "A difficult conversation"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central message?",
+        "options": [
+          "Mental health needs professional treatment",
+          "Healing is quiet and happens through small daily choices",
+          "Talk to friends about everything",
+          "Crying is weakness"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer feel by the end?",
+        "options": [
+          "Still confused",
+          "More at peace with a gentler relationship with themselves",
+          "Angry at how long it took",
+          "Indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T1-V5': {
-    topic: 'Mental Health and Emotional Wellbeing',
-    text: `I used to think tracking my mood meant capturing the big storms, the days where I couldn't pull myself out of bed or when anxiety made my chest feel like tight metal. But lately, I've realized my emotional wellbeing is actually built in the quiet, boring gaps between those extremes. Last Tuesday, I sat on my kitchen floor at 4:00 PM, watching a single patch of sunlight shift across the linoleum while my tea went cold. Usually, that kind of stillness would panic me, triggering a rush to be productive or fill the silence with noise. Instead, I just breathed. I let myself feel tired without judging the fatigue. Mental health isn't a puzzle you solve once and walk away from; it is an ongoing negotiation with your own mind. It's learning how to stay when the discomfort hits, rather than instantly reaching for a distraction. By the time the sun moved past the cabinet, nothing had magically changed, but my chest felt lighter.`,
-    questions: [
-      { type: 'mcq', q: 'Where was the writer sitting during the moment they describe?', options: ['On their hostel room floor', 'On a park bench', 'On their kitchen floor', 'In a bus'], answer: 2 },
-      { type: 'mcq', q: 'What did the writer do differently from usual during that moment?', options: ['Called a friend for support', 'Started working to fill the silence', 'Let themselves feel tired without judging it', 'Went for a walk outside'], answer: 2 },
-      { type: 'mcq', q: 'How does the writer describe mental health?', options: ['A problem to be solved once', 'An ongoing negotiation with your own mind', 'Something only visible in crisis moments', 'A result of good habits'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s past relationship with stillness?', options: ['They always found it peaceful', 'It used to panic them and push them toward productivity', 'They had never experienced it before', 'They avoided it by sleeping'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V4": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "I used to think being fine meant not crying in public, so I got good at holding my face still on crowded metros while everything was on fire. It took until second semester to admit that pushing through was not the same as being okay. There was one Tuesday I sat on my hostel floor at 2am, not sad exactly, just empty, scrolling without reading anything. I did not call anyone. I wish I had. What changed things was not some big breakthrough, it was small: sleeping on time, telling one friend the truth instead of saying I am just tired, letting myself take a day off without narrating it as laziness. I still have weeks where my brain feels like a browser with forty tabs open and I cannot find the one making the noise. Emotional wellbeing is not a fixed state you arrive at once and keep forever, it is more like ongoing maintenance, quiet and unglamorous, done mostly when no one is watching.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the writer compare their mental state to?",
+        "options": [
+          "A storm about to break",
+          "A browser with forty tabs open",
+          "A phone with low battery",
+          "A broken clock"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the writer wish they had done?",
+        "options": [
+          "Gone for a walk",
+          "Called someone",
+          "Written in a journal",
+          "Gone to sleep earlier"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main point about emotional wellbeing?",
+        "options": [
+          "It requires professional help",
+          "It is permanent once reached",
+          "It is ongoing quiet maintenance with no reward",
+          "It depends on others"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about asking for help?",
+        "options": [
+          "They find it easy",
+          "They struggled with it but are slowly learning",
+          "They believe it is unnecessary",
+          "They prefer professional help only"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T2-V2': {
-    topic: 'Technology and Social Media',
-    text: `Ten months ago I took a break from short-form social media. I intended on a six-month break, but this turned into ten months, and I still don't feel like reassessing the possibility of going back. When I first joined Substack in 2021, I wouldn't have considered it a social media platform. Now, I do. Social media apps like Instagram and TikTok went through a cycle. They start out by selling us on the idea that they are made to connect us, and eventually show by their actions that they have other priorities. I make money on Substack. I have fascinating conversations through it. I get access to opportunities via it. I'm not going anywhere, because I believe in the upsides — but I refuse to become addicted. I don't scroll on Notes. I don't read from the app. I don't analyse my stats. Maybe this is my loss. But for now, my goal is to use this platform in a sustainable way to share, create, and connect — without spending a disproportionate amount of my time striving to game the system.`,
-    questions: [
-      { type: 'mcq', q: 'How long did the writer\'s social media break last?', options: ['Six months', 'Eight months', 'Ten months', 'One year'], answer: 2 },
-      { type: 'mcq', q: 'What does the writer say social media platforms eventually reveal about themselves?', options: ['They are great for creativity', 'They have other priorities beyond connecting people', 'They become more honest over time', 'They reward consistent users'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main stance toward social media?', options: ['Complete rejection of all platforms', 'Uncritical enthusiasm', 'Using it intentionally without becoming addicted', 'Avoiding it to protect mental health'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer defines a healthy relationship with technology?', options: ['Zero usage is the only safe approach', 'Using it deliberately for value while avoiding compulsive behaviors', 'Tracking analytics carefully to stay in control', 'Letting others decide when to use it'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V5": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "I used to think tracking my mood meant capturing the big storms, the days where I could not pull myself out of bed or when anxiety made my chest feel like tight metal. But lately I have realized my emotional wellbeing is actually built in the quiet boring gaps between those extremes. Last Tuesday, I sat on my kitchen floor at 4pm, watching a single patch of sunlight shift across the linoleum while my tea went cold. Usually that kind of stillness would panic me, triggering a rush to be productive or fill the silence with noise. Instead I just breathed. I let myself feel tired without judging the fatigue. Mental health is not a puzzle you solve once and walk away from. It is an ongoing negotiation with your own mind. By the time the sun moved past the cabinet, nothing had magically changed, but my chest felt lighter.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Where was the writer during the moment they describe?",
+        "options": [
+          "Hostel room floor",
+          "Park bench",
+          "Kitchen floor",
+          "In a bus"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What did the writer do differently from usual?",
+        "options": [
+          "Called a friend",
+          "Started working to fill the silence",
+          "Let themselves feel tired without judging it",
+          "Went for a walk"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer describe mental health?",
+        "options": [
+          "A problem solved once",
+          "An ongoing negotiation with your own mind",
+          "Only visible in crisis",
+          "A result of good habits"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the writer and stillness in the past?",
+        "options": [
+          "They always found it peaceful",
+          "It used to panic them",
+          "They had never experienced it",
+          "They avoided it by sleeping"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T2-V3': {
-    topic: 'Technology and Social Media',
-    text: `My phone is probably the first thing I reach for every morning, even before I fully open my eyes. That habit makes me uncomfortable because I know how easily minutes become hours. One evening I caught myself watching strangers celebrate milestones while ignoring the dinner my family had already served. My mother called my name twice before I looked up. That tiny moment embarrassed me more than any screen time notification ever could. Social media has introduced me to inspiring creators, useful ideas, and friendships that never would have existed otherwise. It has also quietly convinced me that everyone else is constantly accomplishing something extraordinary. Now I try leaving my phone across the room while studying or eating. The silence feels strange at first, then surprisingly peaceful. I still enjoy posting pictures and sharing funny videos, but I have stopped expecting likes to measure whether a day mattered. Some of my favorite memories were never uploaded anywhere. They exist only in conversations, laughter, and the feeling of walking home after sunset without checking a single notification.`,
-    questions: [
-      { type: 'mcq', q: 'What moment made the writer feel most embarrassed?', options: ['A low number of likes on a post', 'Missing their mother calling their name while on their phone', 'Forgetting to post about an important event', 'Losing followers after a break'], answer: 1 },
-      { type: 'mcq', q: 'What strategy did the writer adopt to manage phone use?', options: ['Deleted all social media apps', 'Set a screen time limit', 'Left their phone in another room while studying or eating', 'Only used their phone after 8pm'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central observation about social media?', options: ['It is mostly harmful and should be avoided', 'It has both genuine value and quietly distorts how we measure a good day', 'It only benefits people who use it professionally', 'It is addictive and impossible to control'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s best memories?', options: ['They were all documented on social media', 'They happened offline and were never uploaded', 'They involved online friendships', 'They came from social media interactions'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T1-V6": {
+    "topic": "Mental Health and Emotional Wellbeing",
+    "text": "You don't just wake up with it one day. You don't just decide to have it. It's an overarching feeling for months or years before you identify it — the feeling of getting less excited about your favorite things, of wanting to stay in bed all day and not caring about the world. It's shutting out everything around you: the unread text messages, the declined calls, the messy room, the piercing headache from having too many thoughts. Something so many of us go through without even knowing it. Each day feels like pretend, pretending to have joy for the day ahead, pretending to see the purpose we're supposed to have. Freshman year of high school, I woke every day and each new task felt like sinking deeper into a body of water with no bottom. I stayed silent because I didn't know if I was the only one going through this. I stayed silent because I didn't want anyone to worry. I stayed silent because I was afraid.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the passage say the feeling is connected to, besides mood?",
+        "options": [
+          "Physical pain",
+          "Wanting to stay in bed and not caring about the world",
+          "Losing friends",
+          "Failing exams"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "When does the narrator specifically say this feeling started for her?",
+        "options": [
+          "Middle school",
+          "Freshman year of high school",
+          "College",
+          "Childhood"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "It's a sudden event",
+          "It's a slow, hidden feeling many go through unknowingly",
+          "It only affects students",
+          "It's easily explained to others"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about why she \"stayed silent\"?",
+        "options": [
+          "She didn't care",
+          "Fear of being judged/worrying others",
+          "She was proud",
+          "She forgot to speak up"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make about how common this experience is among her peers?"
+      }
     ]
   },
-  'T2-V4': {
-    topic: 'Technology and Social Media',
-    text: `I deleted Instagram once for eleven days and felt disoriented, like I'd forgotten a language I spoke fluently. That scared me more than anything else could have. I don't think social media made me unhappy, but it rewired how I measure a good day, against a highlight reel instead of how the day felt. I remember editing a reel for forty minutes, cutting a moment until it looked effortless, realizing I'd spent more time performing the memory than living it. There's a strange guilt in that. I'm not anti-technology, I like learning anything at 1am or talking to people across the world instantly. But I've noticed my attention flinching, reaching for my phone in silences that used to be silences. I'm trying to be more deliberate, posting less, watching more, letting boring moments stay boring instead of becoming content. Some nights I still fall into the scroll and lose an hour I'll never get back, and I feel it the next morning, a specific kind of regret with no real event attached to it.`,
-    questions: [
-      { type: 'mcq', q: 'How long did the writer delete Instagram for?', options: ['Seven days', 'Eleven days', 'Two weeks', 'One month'], answer: 1 },
-      { type: 'mcq', q: 'What realization did the writer have while editing a reel?', options: ['That their content wasn\'t good enough', 'That they had spent more time performing the memory than living it', 'That editing tools were too complicated', 'That their followers didn\'t engage with reels'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer most concerned about regarding their relationship with social media?', options: ['The quality of content they produce', 'How social media has rewired how they measure a good day', 'The number of hours they spend on it', 'Missing important updates from friends'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer feels after losing an hour to scrolling?', options: ['Relaxed and entertained', 'A specific kind of regret with no real event attached', 'Motivated to create more content', 'Neutral and unbothered'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V1": {
+    "topic": "Technology and Social Media",
+    "text": "I don’t know if this is normal or clearly symptomatic of hoarding, but I still have every cell phone I’ve ever owned. From the Motorola 120t candybar with the black-and-white display to the yellow iPhone 5c I use today, my techno-social timeline remains intact — or at least as complete as memory cards, batteries and compulsive outbox purging have allowed.\nThere are limited logical reasons for preserving outdated technology. One could argue that the phones are good backups; contract-breaking replacements are expensive, and I have a long history of water damage. Some parents pass their discarded phones on to their children after they update — to be reactivated, or used as toys. But I’m not saving my obsolete tech for the next generation. My justification for keeping these relics is purely sentimental. In the same way that I periodically scroll to the bottom of my Facebook profile, or dig up (and subsequently destroy) old diaries, I turn on the deactivated devices, seeking information about my former selves.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What is the oldest phone the narrator mentions owning?",
+        "options": [
+          "iPhone 5c",
+          "Motorola 120t",
+          "Nokia 3310",
+          "BlackBerry"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does the narrator say is her real reason for keeping old phones?",
+        "options": [
+          "Financial backup",
+          "Purely sentimental reasons",
+          "For her children",
+          "Because they still work well"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Old phones are wasteful",
+          "Keeping old phones is a way of holding onto past versions of herself",
+          "Technology breaks too easily",
+          "Children need old phones"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's relationship with nostalgia?",
+        "options": [
+          "She avoids it",
+          "She actively seeks it out through old devices/diaries",
+          "She finds it embarrassing",
+          "She has none"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why people generally discard old technology?"
+      }
     ]
   },
-  'T2-V5': {
-    topic: 'Technology and Social Media',
-    text: `My phone screen time report arrived this morning like an uninvited ghost, informing me I spent four hours online yesterday. Four hours. I tried to remember what I actually looked at, but my mind was completely blank. I just recalled the physical sensation of scrolling — that mindless, rhythmic thumb swipe that feels like digging through sand looking for something shiny. Later, I went for a walk without my headphones, leaving them deliberately on my desk. The silence was incredibly loud at first. I noticed the sharp, metallic squeak of a neighbor's rusty gate and the specific way the wind rattled the dry oak leaves overhead. Without a digital screen filtering my reality, the world suddenly regained its rough edges and vibrant dimensions. Social media promises to connect us, but it often just numbs us, turning vivid human experiences into flat, performative squares. Standing on the sidewalk, feeling the cool autumn air hit my face, I realized how much life I miss when I am looking at a glass reflection of someone else's timeline.`,
-    questions: [
-      { type: 'mcq', q: 'How many hours did the writer spend online the day before?', options: ['Two hours', 'Three hours', 'Four hours', 'Five hours'], answer: 2 },
-      { type: 'mcq', q: 'What did the writer notice on their walk that they might have missed otherwise?', options: ['A beautiful sunset', 'The squeak of a gate and wind in the leaves', 'A street musician playing nearby', 'Children playing in the park'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central critique of social media?', options: ['It wastes too much time', 'It numbs us and turns vivid experiences into flat performative squares', 'It makes people compare themselves too much', 'It prioritizes entertainment over education'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer feels about their offline moments?', options: ['They find them boring and uncomfortable', 'They find them richer and more real than online time', 'They feel anxious without a phone', 'They prefer online interactions'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V2": {
+    "topic": "Technology and Social Media",
+    "text": "Ten months ago I took a break from short-form social media. I intended on a six-month break, but this turned into ten months, and I still do not feel like reassessing the possibility of going back. When I first joined Substack in 2021, I would not have considered it a social media platform. Now I do. Social media apps like Instagram and TikTok went through a cycle. They start out by selling us on the idea that they are made to connect us, and eventually show by their actions that they have other priorities. I make money on Substack. I have fascinating conversations through it. I am not going anywhere, because I believe in the upsides. But I refuse to become addicted. I do not scroll on Notes. I do not analyse my stats. My goal is to use this platform in a sustainable way to share, create, and connect without spending a disproportionate amount of my time striving to game the system.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "How long did the break last?",
+        "options": [
+          "Six months",
+          "Eight months",
+          "Ten months",
+          "One year"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What do social media platforms eventually reveal?",
+        "options": [
+          "They are great for creativity",
+          "They have other priorities beyond connecting people",
+          "They become more honest over time",
+          "They reward consistent users"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main stance toward social media?",
+        "options": [
+          "Complete rejection",
+          "Uncritical enthusiasm",
+          "Using it intentionally without becoming addicted",
+          "Avoiding it to protect mental health"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about a healthy relationship with technology?",
+        "options": [
+          "Zero usage is the only safe approach",
+          "Using it deliberately while avoiding compulsive behaviors",
+          "Tracking analytics to stay in control",
+          "Letting others decide"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T3-V1': {
-    topic: 'Relationships and Friendships',
-    text: `I just now realized that I have developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I have since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick guilty feeling that comes with it. Our friendship wasn't always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, eventually living together. At some point our friendship became fragile, and I was afraid to rattle it, didn't want the cracks to show where I could see them. In the end, we just lost touch. I don't know who was the last person to call, who was due to call back. I suppose it doesn't matter, although part of me really hopes I wasn't the one. Maybe sometimes close friendships just trail off, and that has to be okay.`,
-    questions: [
-      { type: 'mcq', q: 'Why does the writer feel uneasy about Philadelphia?', options: ['They had a bad experience there', 'A friend they lost touch with lives there', 'They never liked the city', 'They have a job interview there they are avoiding'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer describe the intensity of their old friendship?', options: ['Healthy and balanced', 'Slightly codependent, like family more than friends', 'Distant and professional', 'Built mostly online'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main reflection on the friendship ending?', options: ['It was someone\'s specific fault', 'Sometimes close friendships just trail off and that has to be okay', 'They should have fought harder to keep it', 'Distance made it inevitable'], answer: 1 },
-      { type: 'mcq', q: 'What emotion best describes the writer\'s tone throughout the passage?', options: ['Anger and resentment', 'Quiet guilt and unresolved sadness', 'Relief that it ended', 'Indifference'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V3": {
+    "topic": "Technology and Social Media",
+    "text": "My phone is probably the first thing I reach for every morning, even before I fully open my eyes. That habit makes me uncomfortable because I know how easily minutes become hours. One evening I caught myself watching strangers celebrate milestones while ignoring the dinner my family had already served. My mother called my name twice before I looked up. That tiny moment embarrassed me more than any screen time notification ever could. Social media has introduced me to inspiring creators, useful ideas, and friendships that never would have existed otherwise. It has also quietly convinced me that everyone else is constantly accomplishing something extraordinary. Now I try leaving my phone across the room while studying or eating. The silence feels strange at first, then surprisingly peaceful. Some of my favorite memories were never uploaded anywhere. They exist only in conversations, laughter, and the feeling of walking home after sunset without checking a single notification.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What moment made the writer feel most embarrassed?",
+        "options": [
+          "A low number of likes",
+          "Missing their mother calling their name while on their phone",
+          "Forgetting to post about an event",
+          "Losing followers"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What strategy did the writer adopt?",
+        "options": [
+          "Deleted all social media",
+          "Set a screen time limit",
+          "Left their phone in another room while studying or eating",
+          "Only used phone after 8pm"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central observation?",
+        "options": [
+          "Social media is mostly harmful",
+          "It has genuine value but distorts how we measure a good day",
+          "It only benefits professionals",
+          "It is impossible to control"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the best memories?",
+        "options": [
+          "All documented on social media",
+          "They happened offline and were never uploaded",
+          "They involved online friendships",
+          "They came from social media"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T3-V3': {
-    topic: 'Relationships and Friendships',
-    text: `The older I get, the more I realize friendships survive because of effort, not luck. I used to believe the right people would simply stay forever. Then one close friend and I stopped talking after a misunderstanding that neither of us addressed. Months passed before we finally met at a small café near campus. We laughed awkwardly, admitted we had both been stubborn, and ordered the same iced coffee we always used to share. That conversation reminded me how much pride can cost. Relationships are rarely destroyed by one dramatic argument. More often, they fade through unanswered messages, postponed plans, and assumptions that someone else will reach out first. I still make mistakes. I sometimes overthink texts or worry that I care more than other people do. Even so, I have become braver about saying, "I miss you," instead of waiting for perfect timing. The friendships that matter most make ordinary days brighter without demanding constant excitement. They give me space to change while remembering older versions of me with kindness. I hope I never become too busy to protect those connections with honest conversations, shared meals, patience, and presence.`,
-    questions: [
-      { type: 'mcq', q: 'What did the writer and their friend order when they finally met?', options: ['Tea and cookies', 'The same iced coffee they used to share', 'Different drinks as a sign of change', 'Nothing — they just talked'], answer: 1 },
-      { type: 'mcq', q: 'According to the writer, how do friendships most often fade?', options: ['Through a big dramatic fight', 'Through unanswered messages, postponed plans, and assumptions', 'Through jealousy and competition', 'Through moving to different cities'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central belief about keeping friendships?', options: ['The right people naturally stay', 'Friendships need luck and timing', 'Friendships survive through consistent effort', 'Distance always weakens bonds'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer now approaches friendship differently?', options: ['They are more selective about who they trust', 'They are braver about expressing that they miss people', 'They prefer fewer, more distant friendships', 'They let friendships fade naturally'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V4": {
+    "topic": "Technology and Social Media",
+    "text": "I deleted Instagram once for eleven days and felt disoriented, like I had forgotten a language I spoke fluently. That scared me more than anything else could have. I do not think social media made me unhappy, but it rewired how I measure a good day, against a highlight reel instead of how the day felt. I remember editing a reel for forty minutes, cutting a moment until it looked effortless, realizing I had spent more time performing the memory than living it. There is a strange guilt in that. I am not anti-technology. I like learning anything at 1am or talking to people across the world instantly. But I have noticed my attention flinching, reaching for my phone in silences that used to be silences. Some nights I still fall into the scroll and lose an hour I will never get back, and I feel it the next morning, a specific kind of regret with no real event attached to it.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "How long did the writer delete Instagram for?",
+        "options": [
+          "Seven days",
+          "Eleven days",
+          "Two weeks",
+          "One month"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What realization came while editing a reel?",
+        "options": [
+          "The content was not good enough",
+          "They spent more time performing the memory than living it",
+          "Editing tools were too complicated",
+          "Followers did not engage"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the writer most concerned about?",
+        "options": [
+          "Quality of content",
+          "How social media rewired how they measure a good day",
+          "Hours spent on it",
+          "Missing updates"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer feel after losing an hour to scrolling?",
+        "options": [
+          "Relaxed and entertained",
+          "A specific kind of regret with no real event attached",
+          "Motivated to create more",
+          "Neutral and unbothered"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T3-V4': {
-    topic: 'Relationships and Friendships',
-    text: `The friendships that have lasted for me were never the loud, constant ones — they were the ones that could survive silence. I have a friend I don't text for weeks sometimes, and when we do talk it's like no time passed, which honestly used to confuse me because I thought love needed proof of daily effort. I learned otherwise the hard way, holding onto people who wanted attention more than connection, mistaking intensity for intimacy. There was a birthday two years ago where almost no one showed up, and the two people who did taught me more about friendship than every group chat ever did. I've become someone who values depth over headcount now. I ask real questions instead of "how are you," because "how are you" rarely gets an honest answer. I've also had to let go of people I genuinely cared about, not because of some dramatic falling out, just growth in different directions, which somehow hurts more because there's no one to be angry at. Relationships are less about finding people who never leave and more about finding the ones worth missing when they eventually do.`,
-    questions: [
-      { type: 'mcq', q: 'What event taught the writer the most about true friendship?', options: ['A surprise party thrown for them', 'A birthday where almost no one showed up but two people did', 'A long trip with a group of friends', 'A difficult conversation in a group chat'], answer: 1 },
-      { type: 'mcq', q: 'What did the writer learn the hard way about relationships?', options: ['That distance always ends friendships', 'That intensity is the same as intimacy', 'That people who wanted attention were not the same as people who wanted connection', 'That group chats are the best way to stay in touch'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main realization about lasting friendships?', options: ['They require daily contact to survive', 'They are about finding people who never leave', 'They are the quiet ones that can survive silence', 'They are built on shared interests'], answer: 2 },
-      { type: 'mcq', q: 'How does the writer feel about letting go of people they genuinely cared about?', options: ['Relieved and unbothered', 'It hurts more because there\'s no one to be angry at', 'Angry and resentful', 'Indifferent'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V5": {
+    "topic": "Technology and Social Media",
+    "text": "My phone screen time report arrived this morning like an uninvited ghost, informing me I spent four hours online yesterday. Four hours. I tried to remember what I actually looked at, but my mind was completely blank. I just recalled the physical sensation of scrolling, that mindless rhythmic thumb swipe that feels like digging through sand looking for something shiny. Later I went for a walk without my headphones, leaving them deliberately on my desk. The silence was incredibly loud at first. I noticed the sharp metallic squeak of a neighbor's rusty gate and the specific way the wind rattled the dry oak leaves overhead. Social media promises to connect us, but it often just numbs us, turning vivid human experiences into flat performative squares. Standing on the sidewalk, feeling the cool autumn air hit my face, I realized how much life I miss when I am looking at a glass reflection of someone else's timeline.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "How many hours did the writer spend online?",
+        "options": [
+          "Two hours",
+          "Three hours",
+          "Four hours",
+          "Five hours"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What did the writer notice on their walk?",
+        "options": [
+          "A beautiful sunset",
+          "The squeak of a gate and wind in the leaves",
+          "A street musician",
+          "Children playing"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central critique of social media?",
+        "options": [
+          "It wastes time",
+          "It numbs us and turns vivid experiences into flat performative squares",
+          "It makes people compare too much",
+          "It prioritizes entertainment"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer feel about offline moments?",
+        "options": [
+          "Boring and uncomfortable",
+          "Richer and more real than online time",
+          "Anxious without a phone",
+          "They prefer online interactions"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T3-V5': {
-    topic: 'Relationships and Friendships',
-    text: `We were sitting in a crowded, noisy diner at midnight, splitting a plate of cold fries, when my best friend looked at me and said, "You don't have to perform for me." The words hit me hard, cracking through the armor of positivity I always try to wear. For years, I believed that maintaining friendships meant being the funny one, the reliable anchor, or the person who never brought any heavy baggage to the table. I was terrified that showing my messy, unresolved pieces would drive people away. But in that booth, under the flickering fluorescent light, I finally let down my guard and talked about how lost I felt. She didn't offer toxic positivity or try to fix it; she just listened, keeping her hand steady on the table. That night taught me that real intimacy isn't built on perfection or shared highlights. It is forged in the willingness to be seen in your weakest moments and trusted not to run away. True friendship is a safe harbor where you can drop the heavy weight of expectations and simply be messy together.`,
-    questions: [
-      { type: 'mcq', q: 'Where were the writer and their friend when this conversation happened?', options: ['A park at sunset', 'A crowded diner at midnight', 'A quiet café in the afternoon', 'Their college common room'], answer: 1 },
-      { type: 'mcq', q: 'What did the writer believe for years about maintaining friendships?', options: ['You had to be constantly available', 'You had to be the funny, reliable one who never showed struggles', 'You needed to share everything openly', 'You should only keep a few close friends'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s central insight about real intimacy?', options: ['It is built on shared achievements and positive moments', 'It requires daily communication', 'It is forged in being seen in your weakest moments without being abandoned', 'It grows from similar personalities'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s behavior in friendships before this moment?', options: ['They were always honest about their feelings', 'They performed positivity to avoid showing vulnerability', 'They avoided close friendships entirely', 'They were known for being emotionally open'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T2-V6": {
+    "topic": "Technology and Social Media",
+    "text": "I don't know if this is normal or clearly symptomatic of hoarding, but I still have every cell phone I've ever owned. From the Motorola 120t candybar with the black-and-white display to the yellow iPhone 5c I use today, my techno-social timeline remains intact — or at least as complete as memory cards, batteries, and compulsive outbox purging have allowed.There are limited logical reasons for preserving outdated technology. One could argue the phones are good backups, since contract-breaking replacements are expensive and I have a long history of water damage. Some parents pass their discarded phones on to their children after they update, to be reactivated or used as toys. But I'm not saving my obsolete tech for the next generation — my reason for keeping these relics is purely sentimental. In the same way I periodically scroll to the bottom of my Facebook profile, or dig up and subsequently destroy old diaries, I turn on the deactivated devices, seeking information about my former selves.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the narrator compare her old phones to, in terms of purpose?",
+        "options": [
+          "Toys for children",
+          "Backups and sentimental keepsakes",
+          "Investment items",
+          "Gifts for friends"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does she say she does with old diaries?",
+        "options": [
+          "Keeps them forever",
+          "Digs them up and destroys them",
+          "Gives them away",
+          "Publishes them"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Technology should always be upgraded",
+          "Old devices serve as a sentimental record of past selves",
+          "Water damage ruins most phones",
+          "Children should reuse old phones"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's feelings toward her past selves?",
+        "options": [
+          "Embarrassment",
+          "Curiosity and attachment",
+          "Indifference",
+          "Regret"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why she doesn't pass her old phones to the next generation?"
+      }
     ]
   },
-  'T4-V3': {
-    topic: 'Career and Future Planning',
-    text: `Choosing a career feels strangely exciting and terrifying at the same time. As a child, I imagined adulthood arrived with certainty, like receiving a map that answered every question. Instead, I spend many evenings comparing opportunities, wondering whether I am making smart decisions or simply chasing whatever sounds impressive. During one internship interview, I admitted that I was still learning instead of pretending to know everything. I expected that honesty to hurt my chances, yet it became the strongest part of our conversation. Since then, I have stopped believing confidence means having every answer. I want meaningful work, but I also want enough balance to enjoy ordinary moments outside my job. Success means little if I am too exhausted to notice the people I love. My goals continue changing as I discover new interests, and that no longer scares me. Planning for the future has become less about predicting every step and more about building skills that travel with me anywhere. Curiosity, resilience, kindness, and discipline feel more dependable than perfect plans. They make uncertainty seem challenging instead of impossible.`,
-    questions: [
-      { type: 'mcq', q: 'What surprised the writer during their internship interview?', options: ['The interviewer was younger than expected', 'Their honesty about still learning became the strongest part of the conversation', 'They were offered the role on the spot', 'The questions were easier than expected'], answer: 1 },
-      { type: 'mcq', q: 'What does the writer now believe about confidence?', options: ['It means projecting certainty even when you don\'t have it', 'It doesn\'t matter in professional settings', 'It doesn\'t mean having every answer', 'It comes from years of experience only'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main shift in how they think about the future?', options: ['From excitement to fear', 'From predicting every step to building portable skills', 'From ambition to contentment', 'From individual goals to team-based thinking'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about what the writer values beyond professional success?', options: ['Fame and recognition', 'Balance to notice and enjoy the people they love', 'Financial stability above all else', 'Constant growth and achievement'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V1": {
+    "topic": "Relationships and Friendships",
+    "text": "I just now realized that I have developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I have since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick guilty feeling that comes with it. Our friendship was not always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, eventually living together. At some point our friendship became fragile, and I was afraid to rattle it. In the end, we just lost touch. I do not know who was the last person to call. Maybe sometimes close friendships just trail off, and that has to be okay.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Why does the writer feel uneasy about Philadelphia?",
+        "options": [
+          "They had a bad experience there",
+          "A friend they lost touch with lives there",
+          "They never liked the city",
+          "They have a job interview they are avoiding"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer describe the friendship?",
+        "options": [
+          "Healthy and balanced",
+          "Slightly codependent, like family more than friends",
+          "Distant and professional",
+          "Built mostly online"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main reflection on the friendship ending?",
+        "options": [
+          "It was someone specific fault",
+          "Sometimes close friendships just trail off and that has to be okay",
+          "They should have fought harder",
+          "Distance made it inevitable"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What emotion best describes the tone?",
+        "options": [
+          "Anger and resentment",
+          "Quiet guilt and unresolved sadness",
+          "Relief that it ended",
+          "Indifference"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T4-V4': {
-    topic: 'Career and Future Planning',
-    text: `Everyone keeps asking what my five-year plan is, and honestly I don't have one — I have a direction and a lot of half-finished spreadsheets. I used to think not knowing exactly where I'd land meant I was behind, especially watching people my age post about internships and offers like they'd already figured out the equation. What's helped is realizing I don't need the whole map, just the next visible turn. Right now that turn looks like ML work I care about, research that keeps me up at night in the good way, not the anxious way. I remember finishing a project at 3am, exhausted, and still feeling this quiet thrill because the thing I built actually worked. That feeling told me more about my future than any career counselor session did. I'm learning to hold ambition loosely, wanting to build things that matter without needing every step pre-approved by some imagined version of success. I still panic sometimes comparing my timeline to everyone else's, refreshing feeds full of announcements that make my progress feel invisible by comparison.`,
-    questions: [
-      { type: 'mcq', q: 'What does the writer say they have instead of a five-year plan?', options: ['A ten-year vision', 'A direction and a lot of half-finished spreadsheets', 'A clear roadmap approved by a mentor', 'Nothing at all'], answer: 1 },
-      { type: 'mcq', q: 'What gave the writer more clarity about their future than any career counselor?', options: ['A conversation with a senior professional', 'The quiet thrill of finishing a project at 3am that actually worked', 'Reading about successful people online', 'A career aptitude test'], answer: 1 },
-      { type: 'mcq', q: 'What is the writer\'s main realization about career planning?', options: ['You need a detailed five-year plan', 'You only need to see the next visible turn, not the whole map', 'Career counselors are the best resource', 'You should follow what your peers are doing'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer feel when they see peers announcing achievements online?', options: ['Happy and inspired for them', 'Indifferent and unbothered', 'Their own progress feels invisible by comparison', 'Motivated to work harder immediately'], answer: 2 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V2": {
+    "topic": "Relationships and Friendships",
+    "text": "I had a friend.I met her when we lived in Aspen. She was the reason I moved to Seattle from Aspen (she was from Seattle) which set me on a new and wonderful path in the Northwest.\nBut she had a crazy boyfriend who made her nuts. We lived thousands of miles apart and yet, I spent countless hours on the phone with her over the years riding the lows and highs; and the break-ups and reunions with this guy.One day she called me to tell me they were getting married. He was sitting there next to her. Any good girlfriend would have been ecstatic — a happy ending! — but I couldn’t believe my ears. “WHAT?!?!?!?!?” I said.I knew I was done. I was going to have to break up with my girlfriend. It might sound cold and heartless, but here is the deal:\nWe need to take care of ourselves, and we need to be selective about the relationships in which we enter. If we have relationships that don’t serve us, we need to prune them out of our lives.\nThis story isn’t about this particular friend. I haven’t spoken to her since that conversation. I don’t know where she is at this time. I don’t even know if she got married, or still is married. Our paths diverged, never to re-join.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Where did the narrator first meet her friend?",
+        "options": [
+          "Seattle",
+          "Aspen",
+          "Portland",
+          "College"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What news did the friend share on the phone that changed things?",
+        "options": [
+          "She was moving away",
+          "She was getting married to her \"crazy\" boyfriend",
+          "She had a new job",
+          "She was having a baby"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "All friendships should last forever",
+          "We must be selective about relationships that don't serve us",
+          "Marriage always ends friendships",
+          "Long-distance friendships never work"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's feelings when she said \"WHAT?!\"?",
+        "options": [
+          "Excitement",
+          "Shock and disbelief",
+          "Happiness",
+          "Boredom"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about what a \"good girlfriend\" should have felt in that moment?"
+      }
     ]
   },
-  'T4-V5': {
-    topic: 'Career and Future Planning',
-    text: `Everyone keeps asking me where I see myself in five years, as if life is a straight, well-paved highway and I already have the map memorized. The truth is, looking at job boards makes my throat tighten with anxiety. I spent the last three months rewriting my resume, obsessing over strong action verbs and trying to make my brief, chaotic life experience look like a calculated, deliberate master plan. But last week, I talked to an older mentor who confessed she didn't find her true professional calling until she turned thirty-five. Hearing that felt like a sudden intake of oxygen. I am slowly learning to accept that a career doesn't have to be a singular, rigid identity that defines your entire worth. It can be a winding collection of curiosities, trial runs, and necessary pivots. My future isn't a terrifying trap I need to escape or solve today; it's an unfolding story. Right now, I am focusing less on finding the perfect final destination and more on building the skills, resilience, and adaptability to handle wherever the path eventually decides to lead.`,
-    questions: [
-      { type: 'mcq', q: 'What did the writer spend three months doing?', options: ['Applying to internships every day', 'Rewriting their resume to make their experience look deliberate', 'Studying for professional certifications', 'Meeting with career counselors'], answer: 1 },
-      { type: 'mcq', q: 'What did the mentor confess that gave the writer relief?', options: ['That resumes don\'t matter as much as people think', 'That she didn\'t find her calling until thirty-five', 'That career anxiety is always temporary', 'That the writer was already on the right path'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer now describe a career?', options: ['A rigid identity that defines your worth', 'A straight highway to a destination', 'A winding collection of curiosities, trial runs, and pivots', 'Something best figured out by thirty'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer felt before talking to the mentor?', options: ['Confident and clear', 'Anxious and behind schedule by their own measure', 'Excited about uncertainty', 'Indifferent to career outcomes'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V3": {
+    "topic": "Relationships and Friendships",
+    "text": "The older I get, the more I realize friendships survive because of effort, not luck. I used to believe the right people would simply stay forever. Then one close friend and I stopped talking after a misunderstanding that neither of us addressed. Months passed before we finally met at a small cafe near campus. We laughed awkwardly, admitted we had both been stubborn, and ordered the same iced coffee we always used to share. That conversation reminded me how much pride can cost. Relationships are rarely destroyed by one dramatic argument. More often, they fade through unanswered messages, postponed plans, and assumptions that someone else will reach out first. I have become braver about saying I miss you, instead of waiting for perfect timing. The friendships that matter most make ordinary days brighter without demanding constant excitement.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the writer and their friend order when they met?",
+        "options": [
+          "Tea and cookies",
+          "The same iced coffee they used to share",
+          "Different drinks",
+          "Nothing, they just talked"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How do friendships most often fade?",
+        "options": [
+          "Through a big fight",
+          "Through unanswered messages and postponed plans",
+          "Through jealousy",
+          "Through moving cities"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central belief about keeping friendships?",
+        "options": [
+          "The right people naturally stay",
+          "Friendships need luck and timing",
+          "Friendships survive through consistent effort",
+          "Distance always weakens bonds"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer now approach friendship?",
+        "options": [
+          "More selective about who they trust",
+          "Braver about expressing that they miss people",
+          "They prefer fewer distant friendships",
+          "They let friendships fade naturally"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T5-V3': {
-    topic: 'Culture and Identity',
-    text: `Growing up taught me that identity is never just one thing. At home, certain traditions shaped my everyday life without much explanation. Outside, I met people whose customs, languages, and beliefs were completely different from mine. For a while I felt pressure to choose between fitting in and holding onto familiar parts of myself. One festival evening, while helping my grandmother arrange small lamps across our balcony, she told me stories she had heard from her own parents. Listening to her made those rituals feel alive instead of routine. I realized culture is carried through ordinary moments as much as celebrations. My identity keeps expanding every time I read something unfamiliar, travel somewhere new, or have an honest conversation with someone whose experiences differ from mine. I no longer see change as betrayal. I see it as adding new chapters without tearing out older pages. The version of me that exists today contains childhood memories, family traditions, personal choices, and unexpected influences from countless people. That mixture sometimes feels complicated, yet it also feels deeply authentic. I would not trade it for anything simpler.`,
-    questions: [
-      { type: 'mcq', q: 'What did the writer\'s grandmother do during the festival evening described?', options: ['Cooked traditional food for the family', 'Told stories she had heard from her own parents while arranging lamps', 'Taught the writer a traditional song', 'Showed old photographs from her childhood'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer now see change in relation to their identity?', options: ['As a threat to their original self', 'As betrayal of their roots', 'As adding new chapters without tearing out old ones', 'As something to be avoided'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central insight about identity?', options: ['It is fixed by childhood experiences', 'It is a mixture that keeps expanding through new experiences', 'It must be chosen between two cultures', 'It is shaped only by family traditions'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer felt earlier in life about their cultural identity?', options: ['Proud and confident', 'Pressured to choose between fitting in and their familiar self', 'Indifferent to cultural differences', 'Excited by the differences around them'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V4": {
+    "topic": "Relationships and Friendships",
+    "text": "The friendships that have lasted for me were never the loud constant ones. They were the ones that could survive silence. I have a friend I do not text for weeks sometimes, and when we do talk it is like no time passed, which honestly used to confuse me because I thought love needed proof of daily effort. I learned otherwise the hard way, holding onto people who wanted attention more than connection, mistaking intensity for intimacy. There was a birthday two years ago where almost no one showed up, and the two people who did taught me more about friendship than every group chat ever did. I have become someone who values depth over headcount now. I ask real questions instead of how are you, because how are you rarely gets an honest answer.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What event taught the writer the most about friendship?",
+        "options": [
+          "A surprise party",
+          "A birthday where almost no one showed up but two people did",
+          "A long trip",
+          "A difficult group chat conversation"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the writer learn the hard way?",
+        "options": [
+          "That distance always ends friendships",
+          "That intensity is the same as intimacy",
+          "That people wanting attention were not the same as wanting connection",
+          "That group chats are best"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main realization about lasting friendships?",
+        "options": [
+          "They require daily contact",
+          "They are about finding people who never leave",
+          "They are the quiet ones that survive silence",
+          "They are built on shared interests"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "How does letting go of people feel for the writer?",
+        "options": [
+          "Relieved and unbothered",
+          "It hurts more because there is no one to be angry at",
+          "Angry and resentful",
+          "Indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T5-V4': {
-    topic: 'Culture and Identity',
-    text: `I grew up code-switching without realizing that's what it was — one version of me at home, another in classrooms, another online. It took years to notice how tiring that translation is. There was a moment at a family function where someone commented on how "modern" I'd become, said kindly but landing like an accusation, and I remember feeling caught between two versions of myself with no idea which one was real. I don't think identity is something you arrive at once and keep. It keeps shifting, shaped by where I am and who's watching, and I've stopped feeling guilty. I still cook the food I grew up with and still argue with older relatives about things I believe in now that I didn't used to. Both feel true. Culture, for me, isn't a costume I put on for festivals — it's the way I argue, love, and grieve, inherited whether I chose it or not. I'm figuring out which parts I want to keep on purpose instead of by default, and which ones I'm ready to let go of quietly. That process feels less like a crisis now and more like just growing up in public.`,
-    questions: [
-      { type: 'mcq', q: 'What comment at a family function stayed with the writer?', options: ['That they had forgotten their roots entirely', 'That they had become "modern", said kindly but landing like an accusation', 'That they should come home more often', 'That their career choice was unexpected'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer describe culture in relation to themselves?', options: ['A costume put on for festivals', 'Something completely left behind as they grew up', 'The way they argue, love, and grieve — inherited whether chosen or not', 'A set of rules imposed by family'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s main reflection on identity?', options: ['It is fixed at birth', 'It is something you choose once and keep', 'It keeps shifting and that\'s okay', 'It should match one culture completely'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about how the writer relates to code-switching?', options: ['They find it effortless and natural', 'They realized it was exhausting only after years', 'They actively chose to do it', 'They stopped doing it entirely'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V5": {
+    "topic": "Relationships and Friendships",
+    "text": "We were sitting in a crowded noisy diner at midnight, splitting a plate of cold fries, when my best friend looked at me and said, you do not have to perform for me. The words hit me hard, cracking through the armor of positivity I always try to wear. For years, I believed that maintaining friendships meant being the funny one, the reliable anchor, or the person who never brought any heavy baggage to the table. I was terrified that showing my messy unresolved pieces would drive people away. But in that booth, under the flickering fluorescent light, I finally let down my guard and talked about how lost I felt. She did not offer toxic positivity or try to fix it. She just listened. That night taught me that real intimacy is not built on perfection or shared highlights.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Where were the writer and their friend?",
+        "options": [
+          "A park at sunset",
+          "A crowded diner at midnight",
+          "A quiet cafe",
+          "Their college common room"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the writer believe for years about friendships?",
+        "options": [
+          "You had to be constantly available",
+          "You had to be the funny reliable one who never showed struggles",
+          "You needed to share everything",
+          "You should keep only a few close friends"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central insight about real intimacy?",
+        "options": [
+          "It is built on shared achievements",
+          "It requires daily communication",
+          "It is forged in being seen in weakness without being abandoned",
+          "It grows from similar personalities"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the writer before this moment?",
+        "options": [
+          "They were always honest about feelings",
+          "They performed positivity to avoid vulnerability",
+          "They avoided close friendships",
+          "They were known for being emotionally open"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
     ]
   },
-  'T5-V5': {
-    topic: 'Culture and Identity',
-    text: `Growing up, my identity felt like a sweater that never quite fit right, always pulling uncomfortably at the seams. Straddling two distinct cultures meant I was constantly code-switching, altering my voice, my food, and my expressions depending on whose living room I was standing in. I felt like an imposter in both worlds, never entirely traditional enough for my family, yet always slightly too different for my peers. Last month, during a holiday dinner, I watched my grandmother cook while my friends texted me jokes on my phone. Instead of feeling pulled apart by the contrast, I suddenly felt a strange, deep sense of peace. I realized that identity isn't a strict test of purity or an all-or-nothing equation. My culture isn't a set of rigid rules I have to perform perfectly; it is a rich, living tapestry woven from everything I inherit and everything I choose to create. I am the bridge between these worlds, not the space between them. Embracing that complexity feels like finally stepping into clothes that were custom-made for me.`,
-    questions: [
-      { type: 'mcq', q: 'What metaphor does the writer use to describe their identity growing up?', options: ['A river with two currents', 'A sweater that never quite fit right', 'A bridge connecting two cities', 'A mirror reflecting two images'], answer: 1 },
-      { type: 'mcq', q: 'What happened during the holiday dinner that shifted the writer\'s perspective?', options: ['A meaningful conversation with their grandmother', 'Watching their grandmother cook while friends texted them brought an unexpected sense of peace', 'A family argument that resolved peacefully', 'Sharing food from both cultures at the same table'], answer: 1 },
-      { type: 'mcq', q: 'How does the writer redefine their cultural identity by the end?', options: ['As something to be abandoned in favour of fitting in', 'As a strict test of purity they must pass', 'As a rich tapestry of inherited and chosen elements', 'As something permanently fixed by childhood'], answer: 2 },
-      { type: 'mcq', q: 'How did the writer feel before finding this sense of peace?', options: ['Proud of their dual identity', 'Like an imposter in both worlds', 'Excited by the differences around them', 'Confused but unbothered'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T3-V6": {
+    "topic": "Relationships and Friendships",
+    "text": "I just now realized that I've developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I've since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick, guilty feeling that comes with it. Our friendship wasn't always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, and eventually living together. At some point our friendship became fragile, and I was afraid to rattle it. In the end, we just lost touch. I don't know who was the last person to call. Maybe sometimes close friendships just trail off, and that has to be okay.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the narrator have to \"swallow\" whenever visiting comes up?",
+        "options": [
+          "Anger",
+          "A sick, guilty feeling",
+          "Excitement",
+          "Nervousness about flying"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What word does the narrator use to describe the friendship's intensity?",
+        "options": [
+          "Playful",
+          "Creepy/codependent",
+          "Distant",
+          "Formal"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "The friendship ended in a dramatic fight",
+          "Close friendships can quietly fade without a clear reason, and that's okay",
+          "Philadelphia is a bad place to live",
+          "Codependency should be avoided at all costs"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's feelings about not knowing who called last?",
+        "options": [
+          "Relief",
+          "A lingering, unresolved discomfort",
+          "Confidence",
+          "Indifference"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make about why the friendship became fragile?"
+      }
     ]
   },
-  'T6-V3': {
-    topic: 'Academic Life and Student Struggles',
-    text: `Student life often looks exciting from the outside, but most days are filled with invisible battles. Deadlines arrive together, assignments multiply unexpectedly, and self-doubt appears whenever I compare myself with classmates. I remember staying awake until three in the morning before an important exam, surrounded by highlighted notes and empty coffee mugs. By sunrise, I could barely remember what I had studied. That experience taught me that exhaustion is not the same as productivity. I still procrastinate sometimes, especially when a task feels overwhelming. Breaking work into smaller pieces has helped more than waiting for motivation. College has also shown me that grades matter, but they do not capture curiosity, creativity, or resilience. Some of my biggest lessons came from projects that failed before finally working. Every difficult semester has forced me to become more patient with myself. I am slowly learning that asking questions is not embarrassing and needing help is not weakness. Education feels less like collecting marks now and more like discovering how I think, adapt, recover, and continue moving forward despite uncertainty.`,
-    questions: [
-      { type: 'mcq', q: 'What did the writer realize after staying up until 3am before an exam?', options: ['That all-nighters always work if you push through', 'That exhaustion is not the same as productivity', 'That coffee is the best study aid', 'That they needed to start studying earlier next time'], answer: 1 },
-      { type: 'mcq', q: 'What strategy helped the writer most with procrastination?', options: ['Waiting until motivation arrived naturally', 'Setting strict timers for study sessions', 'Breaking work into smaller pieces', 'Studying in groups'], answer: 2 },
-      { type: 'mcq', q: 'How has the writer\'s view of education changed?', options: ['From seeing it as collecting marks to discovering how they think and adapt', 'From loving it to resenting it', 'From being motivated to being indifferent', 'From valuing creativity to focusing on grades'], answer: 0 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with failure?', options: ['They avoid difficult projects to prevent it', 'They see it as the end of their efforts', 'Their biggest lessons came from projects that failed before working', 'They are indifferent to it'], answer: 2 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T4-V1": {
+    "topic": "Career and Future Planning",
+    "text": "Daily, like clockwork, I would sit in my little grey cubicle with my neatly-buttered bagel and my bitter corporate coffee and, as if on autopilot, furtively tuck aside whatever press release needed editing that day. Exhibiting the same secrecy and shame as if I were about to watch porn on my work computer, I prepared to begin my ritual of digital self-flagellation.Over time, my paralysis and fear just felt right. A suitable punishment for every mistake I’d made, every mistake I had not realized I’d made, every mistake I might one day make.What I didn’t realize then was that I was battling an invincible foe, a monster of my own creation. What had begun as a healthy inner creative critic had long since metamorphosed into an insatiable, sadistic beast. It had free reign over everything I typed, thought, and did. It was in charge, not me. It told me I sucked. It knew every bad choice I’d ever made. Every wrong word I had written. Every blustering embarrassment and overreach. It knew I was a failure. It told me that all the time.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the narrator do daily \"like clockwork\" at work?",
+        "options": [
+          "Attend meetings",
+          "Edit press releases while feeling secretive shame",
+          "Take long lunch breaks",
+          "Call clients"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does the narrator call the harsh inner voice?",
+        "options": [
+          "A helpful mentor",
+          "An insatiable, sadistic beast/monster",
+          "A coworker",
+          "Her boss"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Editing is a fun job",
+          "An inner critic can spiral into self-destructive judgment",
+          "Corporate coffee is bad",
+          "Mistakes should be punished"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's self-image at this point?",
+        "options": [
+          "Confident",
+          "Convinced she is a failure",
+          "Proud of her work",
+          "Indifferent to feedback"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about deserving \"punishment\" for mistakes?"
+      }
     ]
   },
-  'T6-V4': {
-    topic: 'Academic Life and Student Struggles',
-    text: `Nobody warns you that college stress doesn't feel like exam pressure — it feels like a low hum that never fully turns off. I remember pulling an all-nighter for an assignment, finishing at 6am, feeling proud for four minutes before dreading the next deadline already stacking up behind it. There's this pressure to be simultaneously excelling academically, building a portfolio, networking, and somehow also having a personality outside of all that, and most days it feels like there aren't enough hours to go around. I've had weeks where I aced something I studied for and still felt like a fraud, waiting to be exposed. What's helped isn't some clean fix — it's lowering the bar on my own expectations without lowering my effort, learning that resting isn't the same as quitting. I still compare my pace to classmates who seem to have it together, forgetting I'm only seeing their highlight reel. Academic life has stopped being about proving I'm smart and started being about figuring out how to keep going without burning out completely, one deadline at a time.`,
-    questions: [
-      { type: 'mcq', q: 'How does the writer describe college stress?', options: ['Like an exam that never ends', 'Like a low hum that never fully turns off', 'Like a sudden storm', 'Like carrying a heavy backpack'], answer: 1 },
-      { type: 'mcq', q: 'What happened after the writer finished their all-nighter at 6am?', options: ['They slept for eight hours straight', 'They felt proud for four minutes before dreading the next deadline', 'They celebrated with friends', 'They submitted and forgot about it'], answer: 1 },
-      { type: 'mcq', q: 'What has actually helped the writer manage academic pressure?', options: ['Strict scheduling and no breaks', 'Lowering their bar on expectations without lowering effort, and learning rest isn\'t quitting', 'Comparing themselves to top students for motivation', 'Taking breaks from studying completely'], answer: 1 },
-      { type: 'mcq', q: 'What can you infer about how the writer views their classmates who seem to have it together?', options: ['They genuinely admire and try to copy them', 'They know they\'re only seeing a highlight reel', 'They feel angry at the comparison', 'They believe those students have an unfair advantage'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T4-V2": {
+    "topic": "Career and Future Planning",
+    "text": "Even though I’ve come to appreciate the art of journalism and find it fascinating, I’ve also discovered it’s just not for me. It’s exciting interviewing people and learning new things about a topic and then turning it into a story to be read by many. Yet, they teach us in class that journalists must be objective in their reporting. I just can’t do that. While there are opportunities for non-traditional and non-objective viewpoints in journalism, I still don’t know if this is the career path I want to take. Coming up with a new story idea every week has become more of a hassle that makes me not want to pursue this. These are things I never considered before I made my decision to study journalism.I know I’m not the only student panicking over what they’re doing with their life. A good number of people don’t just come to college for themselves, but because it’s a cultural expectation. It’s an expectation that we get a degree to make it anywhere in life. Often from that pressure, we rush into making decisions that are not our own or well thought-out — leading many students like myself to be unhappy and stressed.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What career did the narrator originally choose to study?",
+        "options": [
+          "Business",
+          "Journalism",
+          "Psychology",
+          "Engineering"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What specifically does the narrator say she \"just can't do\" as a journalist?",
+        "options": [
+          "Meet deadlines",
+          "Be fully objective in reporting",
+          "Interview people",
+          "Write fast"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Everyone should study journalism",
+          "Many students feel pressure to choose careers before they're ready, causing stress",
+          "College degrees guarantee success",
+          "Changing majors is always easy"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's feelings about her decision?",
+        "options": [
+          "Full confidence",
+          "Doubt and reconsideration",
+          "Excitement",
+          "Relief"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why students rush into career decisions?"
+      }
     ]
   },
-  'T6-V5': {
-    topic: 'Academic Life and Student Struggles',
-    text: `The library clock read 3:00 AM, and the text in my textbook had dissolved into a blurry, incomprehensible smudge. I was surrounded by empty paper coffee cups and crumpled highlighters, crying tears of sheer frustration over a practice exam score. In that dark hour, my entire self-worth felt entirely tied to a decimal point on a GPA spreadsheet. The pressure to excel, to compete, and to constantly justify my presence in higher education had turned learning from a joy into a frantic, exhausting survival sport. It took failing a major quiz the next week to finally break that dangerous spell. The world didn't end when the red ink hit my paper. I took a deep breath, walked outside, and realized the trees were still green and I was still fundamentally whole. Academic struggle is real, and it is deeply exhausting, but it is not a final verdict on our intelligence or our human value. We are so much larger than our grades, our test scores, or the institutional anxieties we carry.`,
-    questions: [
-      { type: 'mcq', q: 'What time was it when the writer was in the library?', options: ['Midnight', '1:00 AM', '3:00 AM', '5:00 AM'], answer: 2 },
-      { type: 'mcq', q: 'What finally broke the writer\'s spell of tying self-worth to grades?', options: ['A conversation with a professor', 'Getting a top grade after weeks of work', 'Failing a major quiz and realizing the world didn\'t end', 'Taking a week off from studying'], answer: 2 },
-      { type: 'mcq', q: 'What is the writer\'s central message about academic struggle?', options: ['It builds character and is worth it', 'It is a final verdict on your intelligence', 'It is real but not a measure of our intelligence or human value', 'It should be avoided by studying smarter'], answer: 2 },
-      { type: 'mcq', q: 'What can you infer about the writer\'s relationship with academic performance before this experience?', options: ['They were always indifferent to grades', 'Their entire self-worth was tied to their GPA', 'They had a healthy balance between grades and wellbeing', 'They never compared themselves to classmates'], answer: 1 },
-      { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
+  "T4-V3": {
+    "topic": "Career and Future Planning",
+    "text": "Choosing a career feels strangely exciting and terrifying at the same time. As a child, I imagined adulthood arrived with certainty, like receiving a map that answered every question. Instead, I spend many evenings comparing opportunities, wondering whether I am making smart decisions or simply chasing whatever sounds impressive. During one internship interview, I admitted that I was still learning instead of pretending to know everything. I expected that honesty to hurt my chances, yet it became the strongest part of our conversation. Since then, I have stopped believing confidence means having every answer. I want meaningful work, but I also want enough balance to enjoy ordinary moments outside my job. Planning for the future has become less about predicting every step and more about building skills that travel with me anywhere.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What surprised the writer during their internship interview?",
+        "options": [
+          "The interviewer was younger",
+          "Their honesty about still learning became the strongest part",
+          "They were offered the role immediately",
+          "The questions were easier than expected"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does the writer now believe about confidence?",
+        "options": [
+          "It means projecting certainty even without it",
+          "It does not matter professionally",
+          "It does not mean having every answer",
+          "It comes from years of experience only"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main shift in thinking about the future?",
+        "options": [
+          "From excitement to fear",
+          "From predicting every step to building portable skills",
+          "From ambition to contentment",
+          "From individual to team-based thinking"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does the writer value beyond professional success?",
+        "options": [
+          "Fame and recognition",
+          "Balance to enjoy the people they love",
+          "Financial stability above all",
+          "Constant growth and achievement"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T4-V4": {
+    "topic": "Career and Future Planning",
+    "text": "Everyone keeps asking what my five-year plan is, and honestly I do not have one. I have a direction and a lot of half-finished spreadsheets. I used to think not knowing exactly where I would land meant I was behind, especially watching people my age post about internships and offers like they had already figured out the equation. What has helped is realizing I do not need the whole map, just the next visible turn. Right now that turn looks like ML work I care about, research that keeps me up at night in the good way, not the anxious way. I remember finishing a project at 3am, exhausted, and still feeling this quiet thrill because the thing I built actually worked. That feeling told me more about my future than any career counselor session did.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the writer say they have instead of a five-year plan?",
+        "options": [
+          "A ten-year vision",
+          "A direction and half-finished spreadsheets",
+          "A clear roadmap",
+          "Nothing at all"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What gave the writer clarity about their future?",
+        "options": [
+          "A conversation with a senior professional",
+          "The quiet thrill of finishing a project at 3am that actually worked",
+          "Reading about successful people",
+          "A career aptitude test"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main realization about career planning?",
+        "options": [
+          "You need a detailed five-year plan",
+          "You only need to see the next visible turn",
+          "Career counselors are the best resource",
+          "Follow what peers are doing"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer feel seeing peers announce achievements online?",
+        "options": [
+          "Happy and inspired",
+          "Indifferent and unbothered",
+          "Their own progress feels invisible by comparison",
+          "Motivated to work harder immediately"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T4-V5": {
+    "topic": "Career and Future Planning",
+    "text": "Everyone keeps asking me where I see myself in five years, as if life is a straight well-paved highway and I already have the map memorized. The truth is, looking at job boards makes my throat tighten with anxiety. I spent the last three months rewriting my resume, obsessing over strong action verbs and trying to make my brief chaotic life experience look like a calculated deliberate master plan. But last week, I talked to an older mentor who confessed she did not find her true professional calling until she turned thirty-five. Hearing that felt like a sudden intake of oxygen. I am slowly learning to accept that a career does not have to be a singular rigid identity that defines your entire worth. It can be a winding collection of curiosities, trial runs, and necessary pivots.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the writer spend three months doing?",
+        "options": [
+          "Applying to internships every day",
+          "Rewriting their resume to make experience look deliberate",
+          "Studying for certifications",
+          "Meeting with career counselors"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the mentor confess?",
+        "options": [
+          "That resumes do not matter as much",
+          "That she did not find her calling until thirty-five",
+          "That career anxiety is always temporary",
+          "That the writer was already on the right path"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer now describe a career?",
+        "options": [
+          "A rigid identity that defines your worth",
+          "A straight highway to a destination",
+          "A winding collection of curiosities and pivots",
+          "Something best figured out by thirty"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "How did the writer feel before talking to the mentor?",
+        "options": [
+          "Confident and clear",
+          "Anxious and behind schedule",
+          "Excited about uncertainty",
+          "Indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T4-V6": {
+    "topic": "Career and Future Planning",
+    "text": "Daily, like clockwork, I would sit in my little grey cubicle with my neatly buttered bagel and my bitter corporate coffee and, as if on autopilot, furtively tuck aside whatever press release needed editing that day. Exhibiting the same secrecy and shame as if I were about to watch porn on my work computer, I prepared to begin my ritual of digital self-flagellation.\nOver time, my paralysis and fear just felt right — a suitable punishment for every mistake I'd made, every mistake I hadn't realized I'd made, every mistake I might one day make.\nWhat I didn't realize then was that I was battling an invincible foe, a monster of my own creation. What had begun as a healthy inner creative critic had long since metamorphosed into an insatiable, sadistic beast. It had free reign over everything I typed, thought, and did. It was in charge, not me. It told me I sucked. It knew every bad choice I'd ever made, every wrong word I had written, every blustering embarrassment and overreach. It knew I was a failure. It told me that all the time.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What does the narrator compare her mistakes-driven punishment to?",
+        "options": [
+          "A game",
+          "A \"suitable punishment\" ritual",
+          "A joke",
+          "A lesson plan"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the inner critic originally start as?",
+        "options": [
+          "A random thought",
+          "A healthy inner creative critic",
+          "A coworker's comment",
+          "A childhood memory"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Editing work is enjoyable",
+          "A healthy inner critic can turn into a destructive internal voice",
+          "Coffee causes anxiety",
+          "Mistakes don't matter"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about how in control the narrator feels?",
+        "options": [
+          "Fully in control",
+          "Controlled by the harsh inner voice, not herself",
+          "Indifferent",
+          "Empowered"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about all her past and future mistakes deserving punishment?"
+      }
+    ]
+  },
+  "T5-V1": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "I realised something wasn’t right — I needed a proper break. At the same time, I received a warning about my blood pressure which was dangerously high for someone my age and family medical history, so my doctor strongly recommended a complete lifestyle change and removing every shred of stress from my life.\nWhen I stepped away from my business and switched off emails, I didn’t know what to do with myself. Who was I without work? At first, I just slept — I was so exhausted that over the autumn of 2018 I had been falling asleep sitting up, in the middle of the work day which I had tried to combat with increasing amounts of caffeine, creating a vicious cycle of sleeplessness and exhaustion. Being tired had been my experience of life for so long I couldn’t remember a time when I constantly exhausted — it had become my normal.\nFour months later I sold my share of the business to my co-founder after realising this would take much longer and I needed to change everything in my life — even if I didn’t know what that would look like. Fast forward to December 2019, and I’m back working — not at the same pace or intensity as I was before, but I have regained my passion for behavioural science and my ability to think.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What health issue prompted the narrator's lifestyle change?",
+        "options": [
+          "Insomnia",
+          "Dangerously high blood pressure",
+          "A broken bone",
+          "Vision problems"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the narrator eventually do with her business?",
+        "options": [
+          "Expanded it",
+          "Sold her share to her co-founder",
+          "Shut it down completely",
+          "Hired more staff"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Business success requires constant stress",
+          "Stepping back and prioritizing health can lead to renewed passion",
+          "Caffeine solves exhaustion",
+          "Selling a business is always a failure"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's identity before her break?",
+        "options": [
+          "She was clear on who she was outside work",
+          "Her identity was deeply tied to her work",
+          "She had many hobbies",
+          "She disliked her business"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about needing to remove \"every shred of stress\" to heal?"
+      }
+    ]
+  },
+  "T5-V2": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "Once I got to Ryerson, and as time progressed, I got more overwhelmed and stressed about the degree I was pursuing, eventually feeling burnt out. I would constantly think whether or not this was the right program for me and if I was doing a good enough job compared to everyone else. For most of my first year, I felt as though I had made a mistake, and all those years of art in my life were flushed away just so I could get to Ryerson and feel lost.\nI quickly learned that being a journalist of colour comes with an unspoken responsibility when reporting on marginalized communities—properly representing your community and proving you can make it through the trials and tribulations of being a person of colour (POC) in a predominately white industry.\nThese stressors agonize the feeling of wanting to give up. There’s an anxiousness that’s associated with how white reporters present your community and how you need to atone for the mistakes that others aren’t trained to fix. It makes you feel like you want to crash, hiding away to avoid these unspoken responsibilities.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Where did the narrator attend school?",
+        "options": [
+          "A community college",
+          "Ryerson",
+          "A trade school",
+          "An Ivy League school"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What unspoken responsibility does the narrator describe as a journalist of color?",
+        "options": [
+          "Writing more articles",
+          "Properly representing her community while proving herself in a predominantly white industry",
+          "Working longer hours",
+          "Mentoring other students"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Journalism school is easy",
+          "Burnout for students of color can stem from added, unspoken cultural pressures",
+          "Art degrees are pointless",
+          "All students feel the same pressures"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's emotional state in her first year?",
+        "options": [
+          "Confident and settled",
+          "Lost and doubting her choices",
+          "Excited and thriving",
+          "Indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about how white reporters are perceived versus reporters of color?"
+      }
+    ]
+  },
+  "T5-V3": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "Student life often looks exciting from the outside, but most days are filled with invisible battles. Deadlines arrive together, assignments multiply unexpectedly, and self-doubt appears whenever I compare myself with classmates. I remember staying awake until three in the morning before an important exam, surrounded by highlighted notes and empty coffee mugs. By sunrise, I could barely remember what I had studied. That experience taught me that exhaustion is not the same as productivity. I still procrastinate sometimes, especially when a task feels overwhelming. Breaking work into smaller pieces has helped more than waiting for motivation. College has also shown me that grades matter, but they do not capture curiosity, creativity, or resilience. Some of my biggest lessons came from projects that failed before finally working.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the writer realize after staying up until 3am?",
+        "options": [
+          "All-nighters always work if you push through",
+          "Exhaustion is not the same as productivity",
+          "Coffee is the best study aid",
+          "They needed to start studying earlier"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What strategy helped most with procrastination?",
+        "options": [
+          "Waiting until motivation arrived",
+          "Setting strict timers",
+          "Breaking work into smaller pieces",
+          "Studying in groups"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "How has the view of education changed?",
+        "options": [
+          "From collecting marks to discovering how they think and adapt",
+          "From loving it to resenting it",
+          "From being motivated to indifferent",
+          "From valuing creativity to focusing on grades"
+        ],
+        "answer": 0
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the writer and failure?",
+        "options": [
+          "They avoid difficult projects",
+          "They see failure as the end",
+          "Their biggest lessons came from projects that failed before working",
+          "They are indifferent to it"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T5-V4": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "Nobody warns you that college stress does not feel like exam pressure. It feels like a low hum that never fully turns off. I remember pulling an all-nighter for an assignment, finishing at 6am, feeling proud for four minutes before dreading the next deadline already stacking up behind it. There is this pressure to be simultaneously excelling academically, building a portfolio, networking, and somehow also having a personality outside of all that, and most days it feels like there are not enough hours to go around. I have had weeks where I aced something I studied for and still felt like a fraud, waiting to be exposed. What has helped is not some clean fix. It is lowering the bar on my own expectations without lowering my effort.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "How does the writer describe college stress?",
+        "options": [
+          "Like an exam that never ends",
+          "Like a low hum that never fully turns off",
+          "Like a sudden storm",
+          "Like carrying a heavy backpack"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What happened after finishing the all-nighter at 6am?",
+        "options": [
+          "They slept for eight hours",
+          "They felt proud for four minutes before dreading the next deadline",
+          "They celebrated with friends",
+          "They submitted and forgot about it"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What has actually helped manage academic pressure?",
+        "options": [
+          "Strict scheduling",
+          "Lowering expectations without lowering effort and learning rest is not quitting",
+          "Comparing to top students for motivation",
+          "Taking complete breaks"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "How does the writer view classmates who seem to have it together?",
+        "options": [
+          "They admire and copy them",
+          "They know they are only seeing a highlight reel",
+          "They feel angry",
+          "They believe those students have an unfair advantage"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T5-V5": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "The library clock read 3am, and the text in my textbook had dissolved into a blurry incomprehensible smudge. I was surrounded by empty paper coffee cups and crumpled highlighters, crying tears of sheer frustration over a practice exam score. In that dark hour, my entire self-worth felt entirely tied to a decimal point on a GPA spreadsheet. The pressure to excel, to compete, and to constantly justify my presence in higher education had turned learning from a joy into a frantic exhausting survival sport. It took failing a major quiz the next week to finally break that dangerous spell. The world did not end when the red ink hit my paper. Academic struggle is real and it is deeply exhausting, but it is not a final verdict on our intelligence or our human value.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What time was it in the library?",
+        "options": [
+          "Midnight",
+          "1am",
+          "3am",
+          "5am"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What finally broke the spell of tying self-worth to grades?",
+        "options": [
+          "A conversation with a professor",
+          "Getting a top grade after weeks of work",
+          "Failing a major quiz and realizing the world did not end",
+          "Taking a week off"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What is the central message about academic struggle?",
+        "options": [
+          "It builds character and is worth it",
+          "It is a final verdict on your intelligence",
+          "It is real but not a measure of intelligence or human value",
+          "It should be avoided by studying smarter"
+        ],
+        "answer": 2
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the writer before this experience?",
+        "options": [
+          "They were always indifferent to grades",
+          "Their entire self-worth was tied to their GPA",
+          "They had a healthy balance",
+          "They never compared themselves to classmates"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the writer make that you agree or disagree with? Write one sentence."
+      }
+    ]
+  },
+  "T5-V6": {
+    "topic": "Academic Life and Student Struggles",
+    "text": "I realised something wasn't right — I needed a proper break. At the same time, I received a warning about my blood pressure, which was dangerously high for someone my age and family medical history, so my doctor strongly recommended a complete lifestyle change and removing every shred of stress from my life.\nWhen I stepped away from my business and switched off emails, I didn't know what to do with myself. Who was I without work? At first, I just slept — I was so exhausted that over the autumn of 2018 I had been falling asleep sitting up, in the middle of the work day, which I had tried to combat with increasing amounts of caffeine, creating a vicious cycle of sleeplessness and exhaustion. Being tired had been my experience of life for so long I couldn't remember a time when I wasn't constantly exhausted — it had become my normal.Four months later, I sold my share of the business to my co-founder after realising this would take much longer and I needed to change everything in my life, even if I didn't know what that would look like. Fast forward to December 2019, and I'm back working — not at the same pace or intensity as I was before, but I have regained my passion for behavioural science and my ability to think.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the narrator do when she first stepped away from work?",
+        "options": [
+          "Traveled extensively",
+          "Mostly just slept, exhausted",
+          "Started a new job immediately",
+          "Took up a hobby"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the narrator use to combat her exhaustion, creating a vicious cycle?",
+        "options": [
+          "Exercise",
+          "Increasing amounts of caffeine",
+          "Sleeping pills",
+          "Therapy"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Business owners never get tired",
+          "Recognizing burnout and stepping back can lead to renewed passion",
+          "Caffeine is a good long-term solution",
+          "Selling a business always feels good"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about how normalized her exhaustion had become?",
+        "options": [
+          "She barely noticed it; it felt normal",
+          "She was always aware of it",
+          "She sought help immediately",
+          "She never felt tired"
+        ],
+        "answer": 0
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about what it means to \"start over\" without knowing what her life will look like?"
+      }
+    ]
+  },
+  "T6-V1": {
+    "topic": "Art, Music and Creativity",
+    "text": "I went to visit an older woman in the ICU who had a stroke. She was minimally responsive and unable to focus or answer questions. I was asked to provide some music for orientation. Her daughter was sitting in the corner of the room and looking at her phone. After telling her why I was there, I started to bring some music in. Initially I was just giving some soft soundscape on the guitar, just to set the tone. I noticed that the patient’s heart rate gradually increased, perhaps showing an awareness of the sound stimuli. I continued, following her body-rhythms with the tempo and feel of the music. After a bit, I merged into a ‘lullaby’ version of ‘Edelweiss’ (from The Sound of Music). As I started singing, her daughter got up from her chair, went to the bed and took her hand… and started to cry.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What instrument did the narrator play in the ICU?",
+        "options": [
+          "Piano",
+          "Guitar",
+          "Violin",
+          "Flute"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What song did the narrator merge into as a \"lullaby\" version?",
+        "options": [
+          "Amazing Grace",
+          "Edelweiss",
+          "Silent Night",
+          "Somewhere Over the Rainbow"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Music therapy has no real effect",
+          "Music can create emotional connection even with unresponsive patients and their families",
+          "ICU visits are usually silent",
+          "Daughters rarely visit patients"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the daughter's emotional state before the music started?",
+        "options": [
+          "She was already deeply engaged",
+          "She was distracted/disconnected, absorbed in her phone",
+          "She was crying already",
+          "She was asleep"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why the daughter reacted the way she did to the song?"
+      }
+    ]
+  },
+  "T6-V2": {
+    "topic": "Art, Music and Creativity",
+    "text": "When this topic first came to my attention as I sat behind the steering wheel in my driveway years ago, a memory from college popped into my head, as complete and vivid as it was on the day it happened. The incident took place during a rainy spring afternoon on a grey Northwest day. I was standing next to a cluttered desk in a music professor’s office, puzzling over a jazz chart propped on a listing black music stand. I had found some extra time in my class schedule that semester and had decided to fill it with something “fun” for once. So, after more than a dozen years of playing clarinet in a variety of symphonic bands and orchestras, I thought I would try something different and take private lessons on the saxophone. I’d played alto sax in high school jazz band (although never as an improv soloist), and I thought this would be an opportunity to take a musical side interest to a deeper level.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What instrument did the narrator play for over a dozen years before switching?",
+        "options": [
+          "Saxophone",
+          "Clarinet",
+          "Trumpet",
+          "Piano"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What new instrument did the narrator decide to take private lessons on?",
+        "options": [
+          "Violin",
+          "Saxophone",
+          "Drums",
+          "Guitar"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Music lessons are a waste of time",
+          "Trying something new musically, just for enjoyment, can be meaningful",
+          "Jazz is the only valuable genre",
+          "Private lessons are always disappointing"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's motivation for taking up saxophone?",
+        "options": [
+          "Career advancement",
+          "Personal enjoyment and curiosity, \"just for fun\"",
+          "Peer pressure",
+          "A school requirement"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why this memory remained so vivid years later?"
+      }
+    ]
+  },
+  "T6-V3": {
+    "topic": "Art, Music and Creativity",
+    "text": "Growing up, I always thought creativity belonged to people who could paint perfectly or play an instrument without missing a note. I never saw it in the little things I did until one rainy evening when I sat by my window with my headphones on, sketching absent-mindedly while an old playlist shuffled in the background. The drawing wasn't impressive, and the songs weren't anything extraordinary, but for the first time in weeks, my mind felt quiet. Since then, I've realized that art and music are less about talent and more about giving emotions somewhere to exist. Sometimes I write a few lines in my notes app that no one will ever read. Sometimes I take photos of sunlight on buildings because the moment feels too beautiful to lose. None of it has to be perfect to matter. I think creativity is really about paying attention. It's noticing the colors in an evening sky, hearing a lyric that explains something you've never been able to say, or finding comfort in making something simply because you can. Those moments remind me that even on ordinary days, there is room for wonder if I slow down long enough to notice it.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What was the narrator doing when they had their realization about creativity?",
+        "options": [
+          "Playing an instrument",
+          "Sketching while listening to music on a rainy evening",
+          "Painting a portrait",
+          "Writing a novel"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What does the narrator say they sometimes write that no one will read?",
+        "options": [
+          "Letters",
+          "A few lines in their notes app",
+          "Song lyrics",
+          "A journal"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Creativity requires natural talent",
+          "Creativity is about paying attention to ordinary moments, not talent",
+          "Art should always be shared publicly",
+          "Music is more valuable than visual art"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's view of creativity?",
+        "options": [
+          "It's exclusive to professionals",
+          "It's accessible in everyday attention",
+          "Photography is pointless",
+          "Formal training is essential"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why creative work \"doesn't have to be perfect to matter\"?"
+      }
+    ]
+  },
+  "T6-V4": {
+    "topic": "Art, Music and Creativity",
+    "text": "There's a particular kind of silence that happens right after a song ends and before anyone speaks. I noticed it for the first time in my friend's basement, sophomore year, when she played me a record on an actual turntable because she said MP3s \"flattened\" everything. I didn't believe her until the needle dropped and I heard the tiny crackle before the first note, like the song was clearing its throat before it spoke to me directly.\nThat's when I started paying attention to creativity as something you feel in your chest, not just understand in your head. I used to think art was decoration, something nice hung on the wall of a life that was really about other things. Now I think it's closer to breathing. It's how I process a bad week, how I explain a feeling I don't have words for yet.I paint badly and play guitar worse, and for a long time that embarrassed me. But there's something honest about making a clumsy thing with your own hands. It doesn't have to be good. It just has to be true to whatever was moving through you when you made it. That basement taught me that. I'm still learning it.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "Where did the narrator first notice the silence after a song ends?",
+        "options": [
+          "In a concert hall",
+          "In her friend's basement",
+          "In her bedroom",
+          "At school"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What did the narrator's friend say about MP3s?",
+        "options": [
+          "They sound better than vinyl",
+          "They \"flatten\" everything",
+          "They are more convenient",
+          "They are outdated"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Vinyl records are superior to digital music",
+          "Creativity is something felt, not just decoration, even when imperfectly made",
+          "Musical talent is required to appreciate art",
+          "Basements are ideal for listening to music"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the narrator's feelings about her own art?",
+        "options": [
+          "Full confidence in her skills",
+          "Self-conscious but values honesty in her attempts",
+          "Dislike of painting",
+          "Regret over learning guitar"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about what makes a creative work worthwhile?"
+      }
+    ]
+  },
+  "T6-V5": {
+    "topic": "Art, Music and Creativity",
+    "text": "There’s a specific kind of quiet that only happens at 2:00 AM, when the rest of the world is asleep and it’s just me, a blank notebook, and the low hum of an indie playlist vibrating through my headphones. Last night, a sudden swell of cello in a song I’ve heard a hundred times hit me differently. It felt like a physical ache in my chest, a sudden, urgent need to capture a feeling I couldn’t quite name.That’s the thing about creativity. We often treat art and music as things to be consumed, background noise for our commutes or decor for our walls. But to me, they are messy, necessary lifelines. When I try to paint or write, I’m not chasing perfection; I’m trying to anchor myself. Creativity is the only space where I don’t have to have it all figured out. It’s an admission that being alive is complicated and beautiful, and that sometimes, a three-minute song or a streak of midnight-blue paint can explain who I am much better than I ever could in conversation. It’s not about making something for the world to applaud—it’s about finding yourself in the making.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What time does the narrator describe as the setting for her creative reflection?",
+        "options": [
+          "6:00 AM",
+          "2:00 AM",
+          "Noon",
+          "Midnight exactly"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What triggered the narrator's sudden emotional reaction?",
+        "options": [
+          "A conversation with a friend",
+          "A swell of cello in a familiar song",
+          "A photograph",
+          "A book she read"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Art and music are just background noise for daily life",
+          "Creativity is a necessary emotional lifeline, not something meant only for consumption",
+          "Perfection is the goal of all creative work",
+          "Music should always be shared with an audience"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about why the narrator creates art?",
+        "options": [
+          "To seek public praise",
+          "To process and understand her own feelings",
+          "Out of obligation",
+          "To pass time only"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why people usually treat art and music as things to be simply \"consumed\"?"
+      }
+    ]
+  },
+  "T6-V6": {
+    "topic": "Art, Music and Creativity",
+    "text": "I went to visit an older woman in the ICU who had had a stroke. She was minimally responsive and unable to focus or answer questions. I was asked to provide some music for orientation. Her daughter was sitting in the corner of the room, looking at her phone. After telling her why I was there, I started to bring some music in. Initially I was just playing some soft soundscape on the guitar, just to set the tone. I noticed the patient's heart rate gradually increase, perhaps showing an awareness of the sound stimuli. I continued, following her body rhythms with the tempo and feel of the music. After a bit, I merged into a 'lullaby' version of 'Edelweiss' (from The Sound of Music). As I started singing, her daughter got up from her chair, went to the bed, took her hand — and started to cry.",
+    "questions": [
+      {
+        "type": "mcq",
+        "q": "What did the narrator notice about the patient's heart rate?",
+        "options": [
+          "It decreased",
+          "It gradually increased in response to the music",
+          "It stayed the same",
+          "It wasn't measurable"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What action did the daughter take after the singing began?",
+        "options": [
+          "She left the room",
+          "She got up, took her mother's hand, and cried",
+          "She called a nurse",
+          "She started recording"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What is the main idea of the passage?",
+        "options": [
+          "Music has no effect on ICU patients",
+          "Music can reach patients and families emotionally even in difficult moments",
+          "Guitar isn't suited for hospitals",
+          "Daughters are usually indifferent"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "mcq",
+        "q": "What can you infer about the significance of the song choice?",
+        "options": [
+          "It was random",
+          "It was meaningful/personal, given the emotional reaction it caused",
+          "It upset the daughter",
+          "It had no impact"
+        ],
+        "answer": 1
+      },
+      {
+        "type": "open",
+        "q": "What assumption does the narrator make about why playing music mattered in this specific moment?"
+      }
     ]
   }
 };
@@ -827,11 +2587,29 @@ async function handleLogin() {
       errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
     }
     participantId = pid;
-    assignedPassages = data.passages.filter(p => PASSAGES[p]);
+
+    // The assignment codes (e.g. "T4-V1") come live from the Assignments sheet.
+    // PASSAGES below is generated directly from the Passages + Questions sheets,
+    // so this filter should normally keep every assigned passage. If a code is
+    // ever missing (e.g. someone renamed a PassageID in the sheet), we don't fail
+    // silently — we log it so it gets caught during testing.
+    const rawAssigned = data.passages || [];
+    assignedPassages = rawAssigned.filter(p => PASSAGES[p]);
+    const unresolved = rawAssigned.filter(p => !PASSAGES[p]);
+    if (unresolved.length > 0) {
+      console.warn('Passage IDs assigned in the sheet but missing from PASSAGES:', unresolved);
+    }
+
     if (assignedPassages.length === 0) {
       errEl.textContent = "No passages assigned yet. Please contact the researcher.";
       errEl.style.display = "block"; btn.disabled = false; btn.innerHTML = "Continue →"; return;
     }
+
+    showScreen("screen-loading");
+    document.getElementById('loading-message').textContent = 'Setting up your reading materials...';
+    await new Promise(res => setTimeout(res, 600));
+
+    btn.disabled = false; btn.innerHTML = "Continue →";
     showScreen("screen-instructions");
   } catch(e) {
     errEl.textContent = "Connection error. Please check your internet and try again.";
@@ -914,7 +2692,7 @@ function showPassage() {
   setTimeout(() => startGazeTracking(pid), 500);
 }
 
-function doneReading() {
+async function doneReading() {
   const pid = assignedPassages[currentPassageIndex];
   stopGazeTracking(pid);
 
@@ -926,6 +2704,13 @@ function doneReading() {
     gazeData[pid].fixationDuration = parseFloat((elapsed / wordCount * 1000).toFixed(1));
     gazeData[pid].regressionCount = Math.max(0, Math.round((elapsed - (wordCount / 200 * 60)) * 0.5));
   }
+
+  const doneBtn = document.querySelector('#screen-reading .btn-primary');
+  doneBtn.disabled = true;
+  doneBtn.innerHTML = '<span class="spinner"></span> Loading questions...';
+  await new Promise(res => setTimeout(res, 350));
+  doneBtn.disabled = false;
+  doneBtn.innerHTML = 'Done Reading →';
 
   showQuiz();
 }
@@ -949,32 +2734,41 @@ function showQuiz() {
   passage.questions.forEach((q, qi) => {
     const div = document.createElement('div');
     div.className = 'quiz-q';
+    div.id = `quiz-q-${qi}`;
 
     const qText = document.createElement('div');
     qText.className = 'quiz-q-text';
-    qText.textContent = `Q${qi + 1}. ${q.q}`;
+    qText.innerHTML = `Q${qi + 1}. ${q.q} <span class="quiz-q-required">*</span>`;
     div.appendChild(qText);
 
     if (q.type === 'mcq') {
       q.options.forEach((opt, oi) => {
         const label = document.createElement('label');
         label.className = 'quiz-option';
-        label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}"> ${opt}`;
+        label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}" required> ${opt}`;
         label.querySelector('input').addEventListener('change', () => {
           document.querySelectorAll(`[name="q${qi}"]`).forEach(r => r.closest('label').classList.remove('selected'));
           label.classList.add('selected');
+          div.classList.remove('missing');
         });
         div.appendChild(label);
       });
     } else {
       const ta = document.createElement('textarea');
       ta.id = `open-q${qi}`;
-      ta.placeholder = 'Write your answer here...';
+      ta.placeholder = 'Write your answer here... (required)';
+      ta.addEventListener('input', () => {
+        if (ta.value.trim()) div.classList.remove('missing');
+      });
       div.appendChild(ta);
     }
 
     container.appendChild(div);
   });
+
+  const submitBtn = document.querySelector('#screen-quiz .btn-primary');
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = 'Submit & Continue →';
 
   showScreen('screen-quiz');
 }
@@ -986,22 +2780,42 @@ async function submitQuiz() {
   errEl.textContent = '';
 
   const answers = {};
-  let allAnswered = true;
+  const missingIndices = [];
 
   passage.questions.forEach((q, qi) => {
+    const qDiv = document.getElementById(`quiz-q-${qi}`);
     if (q.type === 'mcq') {
       const selected = document.querySelector(`input[name="q${qi}"]:checked`);
-      if (!selected) { allAnswered = false; } else { answers[`q${qi + 1}`] = parseInt(selected.value); }
+      if (!selected) {
+        missingIndices.push(qi);
+        qDiv.classList.add('missing');
+      } else {
+        qDiv.classList.remove('missing');
+        answers[`q${qi + 1}`] = parseInt(selected.value);
+      }
     } else {
       const val = document.getElementById(`open-q${qi}`).value.trim();
-      if (!val) { allAnswered = false; } else { answers[`q${qi + 1}`] = val; }
+      if (!val) {
+        missingIndices.push(qi);
+        qDiv.classList.add('missing');
+      } else {
+        qDiv.classList.remove('missing');
+        answers[`q${qi + 1}`] = val;
+      }
     }
   });
 
-  if (!allAnswered) {
-    errEl.textContent = 'Please answer all questions before continuing.';
+  if (missingIndices.length > 0) {
+    errEl.textContent = missingIndices.length === 1
+      ? 'Please answer question ' + (missingIndices[0] + 1) + ' before continuing — every question is required.'
+      : 'Please answer all ' + missingIndices.length + ' remaining questions — every question is required.';
+    document.getElementById(`quiz-q-${missingIndices[0]}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
+
+  const submitBtn = document.querySelector('#screen-quiz .btn-primary');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
 
   // calculate comprehension score
   let score = 0;
