@@ -426,7 +426,7 @@
       <li><span class="num">4</span><span>Answer 5 short questions about each passage. Be honest — there are no right or wrong answers beyond what the text says.</span></li>
       <li><span class="num">5</span><span>Sit in a well-lit room, keep your head relatively still, and make sure your face is visible to the webcam.</span></li>
     </ul>
-    <p style="font-weight:700; color:#DC2626; text-transform:uppercase; font-size:14px; margin-bottom:20px;">DO NOT USE AI TO ANSWER THE QUESTIONS — THIS IS A RESEARCH STUDY AND REQUIRES YOUR OWN HONEST RESPONSES.</p>
+    <p style="font-weight:700; color:#DC2626; text-transform:uppercase; font-size:14px; margin-bottom:20px;">DO NOT USE AI (E.G. CHATGPT) TO ANSWER THE QUESTIONS — THIS IS A RESEARCH STUDY AND REQUIRES YOUR OWN HONEST RESPONSES.</p>
     <div class="divider"></div>
     <p style="font-size:13px;">Your responses are completely anonymous and will only be used for research purposes. You can stop at any time.</p>
     <button class="btn btn-primary" onclick="startCalibration()">Start Calibration →</button>
@@ -756,7 +756,184 @@ const PASSAGES = {
       { type: 'mcq', q: 'What can you infer about the writer\'s relationship with academic performance before this experience?', options: ['They were always indifferent to grades', 'Their entire self-worth was tied to their GPA', 'They had a healthy balance between grades and wellbeing', 'They never compared themselves to classmates'], answer: 1 },
       { type: 'open', q: 'What assumption does the writer make that you agree or disagree with? Write one sentence.' }
     ]
-  }
+  },
+  'T1-V2': {
+    topic: 'Mental Health and Emotional Wellbeing',
+    text: `This morning, I woke up early for a work call. I walked out into my living room and was disappointed but unsurprised by what I found. I made dinner last night. Baked lemon-herb chicken, garlic bread, mesclun salad with fig balsamic dressing, and grilled artichokes. It is my ambition to cook on most nights, but lately, that goal has felt out of reach, just another unchecked box on my ever-expanding to-do list.
+My husband washed his own plate, cup, and fork — a habit he began after I asked him not to leave his dishes for me after meals. I washed everything else, but, distracted by my chronic back pain that was flaring this weekend, I neglected to transfer the leftovers from the slow cooker to the fridge. This morning, it was still sitting in the slow cooker. I know he saw it because it was next to his mini-blender, and I heard him make himself a smoothie last night after I went to bed. After sitting out all night, the extra food is in the trash now.`,
+    questions: [
+      { type: 'mcq', q: 'What did the narrator make for dinner?', options: ['Pasta', 'Lemon-herb chicken, garlic bread, salad, artichokes', 'Grilled salmon', 'Pizza'], answer: 1 },
+      { type: 'mcq', q: 'What habit did the husband start?', options: ['Cooking dinner', 'Washing his own plate, cup, fork', 'All chores', 'Making smoothies for both'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['he loves elaborate cooking', 'She\'s navigating uneven household labor while managing chronic pain', 'Husband refuses to help', 'Perfect division of chores'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about her feelings toward the leftovers situation?', options: ['Indifferent', 'Quiet frustration/disappointment', 'Thrilled', 'Angry at herself'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about her husband noticing the leftovers?' }
+    ]
+  },
+  'T1-V6': {
+    topic: 'Mental Health and Emotional Wellbeing',
+    text: `You don't just wake up with it one day. You don't just decide to have it. It's an overarching feeling for months or years before you identify it — the feeling of getting less excited about your favorite things, of wanting to stay in bed all day and not caring about the world. It's shutting out everything around you: the unread text messages, the declined calls, the messy room, the piercing headache from having too many thoughts. Something so many of us go through without even knowing it. Each day feels like pretend, pretending to have joy for the day ahead, pretending to see the purpose we're supposed to have. Freshman year of high school, I woke every day and each new task felt like sinking deeper into a body of water with no bottom. I stayed silent because I didn't know if I was the only one going through this. I stayed silent because I didn't want anyone to worry. I stayed silent because I was afraid.`,
+    questions: [
+      { type: 'mcq', q: 'What does the passage say the feeling is connected to, besides mood?', options: ['Physical pain', 'Wanting to stay in bed and not caring about the world', 'Losing friends', 'Failing exams'], answer: 1 },
+      { type: 'mcq', q: 'When does the narrator specifically say this feeling started for her?', options: ['Middle school', 'Freshman year of high school', 'College', 'Childhood'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['It\'s a sudden event', 'It\'s a slow, hidden feeling many go through unknowingly', 'It only affects students', 'It\'s easily explained to others'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about why she "stayed silent"?', options: ['She didn\'t care', 'Fear of being judged/worrying others', 'She was proud', 'She forgot to speak up'], answer: 1 },
+      { type: 'open', q: 'What assumption does the writer make about how common this experience is among her peers?' }
+    ]
+  },
+  'T2-V1': {
+    topic: 'Technology and Social Media',
+    text: `I don’t know if this is normal or clearly symptomatic of hoarding, but I still have every cell phone I’ve ever owned. From the Motorola 120t candybar with the black-and-white display to the yellow iPhone 5c I use today, my techno-social timeline remains intact — or at least as complete as memory cards, batteries and compulsive outbox purging have allowed.
+There are limited logical reasons for preserving outdated technology. One could argue that the phones are good backups; contract-breaking replacements are expensive, and I have a long history of water damage. Some parents pass their discarded phones on to their children after they update — to be reactivated, or used as toys. But I’m not saving my obsolete tech for the next generation. My justification for keeping these relics is purely sentimental. In the same way that I periodically scroll to the bottom of my Facebook profile, or dig up (and subsequently destroy) old diaries, I turn on the deactivated devices, seeking information about my former selves.`,
+    questions: [
+      { type: 'mcq', q: 'What is the oldest phone the narrator mentions owning?', options: ['iPhone 5c', 'Motorola 120t', 'Nokia 3310', 'BlackBerry'], answer: 1 },
+      { type: 'mcq', q: 'What does the narrator say is her real reason for keeping old phones?', options: ['Financial backup', 'Purely sentimental reasons', 'For her children', 'Because they still work well'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Old phones are wasteful', 'Keeping old phones is a way of holding onto past versions of herself', 'Technology breaks too easily', 'Children need old phones'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s relationship with nostalgia?', options: ['She avoids it', 'She actively seeks it out through old devices/diaries', 'She finds it embarrassing', 'She has none'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why people generally discard old technology?' }
+    ]
+  },
+  'T2-V6': {
+    topic: 'Technology and Social Media',
+    text: `I don't know if this is normal or clearly symptomatic of hoarding, but I still have every cell phone I've ever owned. From the Motorola 120t candybar with the black-and-white display to the yellow iPhone 5c I use today, my techno-social timeline remains intact — or at least as complete as memory cards, batteries, and compulsive outbox purging have allowed.There are limited logical reasons for preserving outdated technology. One could argue the phones are good backups, since contract-breaking replacements are expensive and I have a long history of water damage. Some parents pass their discarded phones on to their children after they update, to be reactivated or used as toys. But I'm not saving my obsolete tech for the next generation — my reason for keeping these relics is purely sentimental. In the same way I periodically scroll to the bottom of my Facebook profile, or dig up and subsequently destroy old diaries, I turn on the deactivated devices, seeking information about my former selves.`,
+    questions: [
+      { type: 'mcq', q: 'What does the narrator compare her old phones to, in terms of purpose?', options: ['Toys for children', 'Backups and sentimental keepsakes', 'Investment items', 'Gifts for friends'], answer: 1 },
+      { type: 'mcq', q: 'What does she say she does with old diaries?', options: ['Keeps them forever', 'Digs them up and destroys them', 'Gives them away', 'Publishes them'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Technology should always be upgraded', 'Old devices serve as a sentimental record of past selves', 'Water damage ruins most phones', 'Children should reuse old phones'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s feelings toward her past selves?', options: ['Embarrassment', 'Curiosity and attachment', 'Indifference', 'Regret'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why she doesn\'t pass her old phones to the next generation?' }
+    ]
+  },
+  'T3-V2': {
+    topic: 'Relationships and Friendships',
+    text: `I had a friend.I met her when we lived in Aspen. She was the reason I moved to Seattle from Aspen (she was from Seattle) which set me on a new and wonderful path in the Northwest.
+But she had a crazy boyfriend who made her nuts. We lived thousands of miles apart and yet, I spent countless hours on the phone with her over the years riding the lows and highs; and the break-ups and reunions with this guy.One day she called me to tell me they were getting married. He was sitting there next to her. Any good girlfriend would have been ecstatic — a happy ending! — but I couldn’t believe my ears. “WHAT?!?!?!?!?” I said.I knew I was done. I was going to have to break up with my girlfriend. It might sound cold and heartless, but here is the deal:
+We need to take care of ourselves, and we need to be selective about the relationships in which we enter. If we have relationships that don’t serve us, we need to prune them out of our lives.
+This story isn’t about this particular friend. I haven’t spoken to her since that conversation. I don’t know where she is at this time. I don’t even know if she got married, or still is married. Our paths diverged, never to re-join.`,
+    questions: [
+      { type: 'mcq', q: 'Where did the narrator first meet her friend?', options: ['Seattle', 'Aspen', 'Portland', 'College'], answer: 1 },
+      { type: 'mcq', q: 'What news did the friend share on the phone that changed things?', options: ['She was moving away', 'She was getting married to her "crazy" boyfriend', 'She had a new job', 'She was having a baby'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['All friendships should last forever', 'We must be selective about relationships that don\'t serve us', 'Marriage always ends friendships', 'Long-distance friendships never work'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s feelings when she said "WHAT?!"?', options: ['Excitement', 'Shock and disbelief', 'Happiness', 'Boredom'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about what a "good girlfriend" should have felt in that moment?' }
+    ]
+  },
+  'T3-V6': {
+    topic: 'Relationships and Friendships',
+    text: `I just now realized that I've developed a fear about going to Philadelphia. My Philadelphia phobia is connected to the fact that a friend I've since lost touch with lives in the area. Any time the subject of visiting comes up, I have to swallow the sick, guilty feeling that comes with it. Our friendship wasn't always the healthiest thing. It had a slightly creepy intensity that friendships between women in those formative years can have. It occasionally bordered on codependent. We seemed more like family than friends. We spent virtually every waking minute together, coordinating our class schedules, sharing lunch and dinner almost every day, and eventually living together. At some point our friendship became fragile, and I was afraid to rattle it. In the end, we just lost touch. I don't know who was the last person to call. Maybe sometimes close friendships just trail off, and that has to be okay.`,
+    questions: [
+      { type: 'mcq', q: 'What does the narrator have to "swallow" whenever visiting comes up?', options: ['Anger', 'A sick, guilty feeling', 'Excitement', 'Nervousness about flying'], answer: 1 },
+      { type: 'mcq', q: 'What word does the narrator use to describe the friendship\'s intensity?', options: ['Playful', 'Creepy/codependent', 'Distant', 'Formal'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['The friendship ended in a dramatic fight', 'Close friendships can quietly fade without a clear reason, and that\'s okay', 'Philadelphia is a bad place to live', 'Codependency should be avoided at all costs'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s feelings about not knowing who called last?', options: ['Relief', 'A lingering, unresolved discomfort', 'Confidence', 'Indifference'], answer: 1 },
+      { type: 'open', q: 'What assumption does the writer make about why the friendship became fragile?' }
+    ]
+  },
+  'T4-V1': {
+    topic: 'Career and Future Planning',
+    text: `Daily, like clockwork, I would sit in my little grey cubicle with my neatly-buttered bagel and my bitter corporate coffee and, as if on autopilot, furtively tuck aside whatever press release needed editing that day. Exhibiting the same secrecy and shame as if I were about to watch porn on my work computer, I prepared to begin my ritual of digital self-flagellation.Over time, my paralysis and fear just felt right. A suitable punishment for every mistake I’d made, every mistake I had not realized I’d made, every mistake I might one day make.What I didn’t realize then was that I was battling an invincible foe, a monster of my own creation. What had begun as a healthy inner creative critic had long since metamorphosed into an insatiable, sadistic beast. It had free reign over everything I typed, thought, and did. It was in charge, not me. It told me I sucked. It knew every bad choice I’d ever made. Every wrong word I had written. Every blustering embarrassment and overreach. It knew I was a failure. It told me that all the time.`,
+    questions: [
+      { type: 'mcq', q: 'What does the narrator do daily "like clockwork" at work?', options: ['Attend meetings', 'Edit press releases while feeling secretive shame', 'Take long lunch breaks', 'Call clients'], answer: 1 },
+      { type: 'mcq', q: 'What does the narrator call the harsh inner voice?', options: ['A helpful mentor', 'An insatiable, sadistic beast/monster', 'A coworker', 'Her boss'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Editing is a fun job', 'An inner critic can spiral into self-destructive judgment', 'Corporate coffee is bad', 'Mistakes should be punished'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s self-image at this point?', options: ['Confident', 'Convinced she is a failure', 'Proud of her work', 'Indifferent to feedback'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about deserving "punishment" for mistakes?' }
+    ]
+  },
+  'T4-V2': {
+    topic: 'Career and Future Planning',
+    text: `Even though I’ve come to appreciate the art of journalism and find it fascinating, I’ve also discovered it’s just not for me. It’s exciting interviewing people and learning new things about a topic and then turning it into a story to be read by many. Yet, they teach us in class that journalists must be objective in their reporting. I just can’t do that. While there are opportunities for non-traditional and non-objective viewpoints in journalism, I still don’t know if this is the career path I want to take. Coming up with a new story idea every week has become more of a hassle that makes me not want to pursue this. These are things I never considered before I made my decision to study journalism.I know I’m not the only student panicking over what they’re doing with their life. A good number of people don’t just come to college for themselves, but because it’s a cultural expectation. It’s an expectation that we get a degree to make it anywhere in life. Often from that pressure, we rush into making decisions that are not our own or well thought-out — leading many students like myself to be unhappy and stressed.`,
+    questions: [
+      { type: 'mcq', q: 'What career did the narrator originally choose to study?', options: ['Business', 'Journalism', 'Psychology', 'Engineering'], answer: 1 },
+      { type: 'mcq', q: 'What specifically does the narrator say she "just can\'t do" as a journalist?', options: ['Meet deadlines', 'Be fully objective in reporting', 'Interview people', 'Write fast'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Everyone should study journalism', 'Many students feel pressure to choose careers before they\'re ready, causing stress', 'College degrees guarantee success', 'Changing majors is always easy'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s feelings about her decision?', options: ['Full confidence', 'Doubt and reconsideration', 'Excitement', 'Relief'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why students rush into career decisions?' }
+    ]
+  },
+  'T4-V6': {
+    topic: 'Career and Future Planning',
+    text: `Daily, like clockwork, I would sit in my little grey cubicle with my neatly buttered bagel and my bitter corporate coffee and, as if on autopilot, furtively tuck aside whatever press release needed editing that day. Exhibiting the same secrecy and shame as if I were about to watch porn on my work computer, I prepared to begin my ritual of digital self-flagellation.
+Over time, my paralysis and fear just felt right — a suitable punishment for every mistake I'd made, every mistake I hadn't realized I'd made, every mistake I might one day make.
+What I didn't realize then was that I was battling an invincible foe, a monster of my own creation. What had begun as a healthy inner creative critic had long since metamorphosed into an insatiable, sadistic beast. It had free reign over everything I typed, thought, and did. It was in charge, not me. It told me I sucked. It knew every bad choice I'd ever made, every wrong word I had written, every blustering embarrassment and overreach. It knew I was a failure. It told me that all the time.`,
+    questions: [
+      { type: 'mcq', q: 'What does the narrator compare her mistakes-driven punishment to?', options: ['A game', 'A "suitable punishment" ritual', 'A joke', 'A lesson plan'], answer: 1 },
+      { type: 'mcq', q: 'What did the inner critic originally start as?', options: ['A random thought', 'A healthy inner creative critic', 'A coworker\'s comment', 'A childhood memory'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Editing work is enjoyable', 'A healthy inner critic can turn into a destructive internal voice', 'Coffee causes anxiety', 'Mistakes don\'t matter'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about how in control the narrator feels?', options: ['Fully in control', 'Controlled by the harsh inner voice, not herself', 'Indifferent', 'Empowered'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about all her past and future mistakes deserving punishment?' }
+    ]
+  },
+  'T5-V1': {
+    topic: 'Academic Life and Student Struggles',
+    text: `I realised something wasn’t right — I needed a proper break. At the same time, I received a warning about my blood pressure which was dangerously high for someone my age and family medical history, so my doctor strongly recommended a complete lifestyle change and removing every shred of stress from my life.
+When I stepped away from my business and switched off emails, I didn’t know what to do with myself. Who was I without work? At first, I just slept — I was so exhausted that over the autumn of 2018 I had been falling asleep sitting up, in the middle of the work day which I had tried to combat with increasing amounts of caffeine, creating a vicious cycle of sleeplessness and exhaustion. Being tired had been my experience of life for so long I couldn’t remember a time when I constantly exhausted — it had become my normal.
+Four months later I sold my share of the business to my co-founder after realising this would take much longer and I needed to change everything in my life — even if I didn’t know what that would look like. Fast forward to December 2019, and I’m back working — not at the same pace or intensity as I was before, but I have regained my passion for behavioural science and my ability to think.`,
+    questions: [
+      { type: 'mcq', q: 'What health issue prompted the narrator\'s lifestyle change?', options: ['Insomnia', 'Dangerously high blood pressure', 'A broken bone', 'Vision problems'], answer: 1 },
+      { type: 'mcq', q: 'What did the narrator eventually do with her business?', options: ['Expanded it', 'Sold her share to her co-founder', 'Shut it down completely', 'Hired more staff'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Business success requires constant stress', 'Stepping back and prioritizing health can lead to renewed passion', 'Caffeine solves exhaustion', 'Selling a business is always a failure'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s identity before her break?', options: ['She was clear on who she was outside work', 'Her identity was deeply tied to her work', 'She had many hobbies', 'She disliked her business'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about needing to remove "every shred of stress" to heal?' }
+    ]
+  },
+  'T5-V2': {
+    topic: 'Academic Life and Student Struggles',
+    text: `Once I got to Ryerson, and as time progressed, I got more overwhelmed and stressed about the degree I was pursuing, eventually feeling burnt out. I would constantly think whether or not this was the right program for me and if I was doing a good enough job compared to everyone else. For most of my first year, I felt as though I had made a mistake, and all those years of art in my life were flushed away just so I could get to Ryerson and feel lost.
+I quickly learned that being a journalist of colour comes with an unspoken responsibility when reporting on marginalized communities—properly representing your community and proving you can make it through the trials and tribulations of being a person of colour (POC) in a predominately white industry.
+These stressors agonize the feeling of wanting to give up. There’s an anxiousness that’s associated with how white reporters present your community and how you need to atone for the mistakes that others aren’t trained to fix. It makes you feel like you want to crash, hiding away to avoid these unspoken responsibilities.`,
+    questions: [
+      { type: 'mcq', q: 'Where did the narrator attend school?', options: ['A community college', 'Ryerson', 'A trade school', 'An Ivy League school'], answer: 1 },
+      { type: 'mcq', q: 'What unspoken responsibility does the narrator describe as a journalist of color?', options: ['Writing more articles', 'Properly representing her community while proving herself in a predominantly white industry', 'Working longer hours', 'Mentoring other students'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Journalism school is easy', 'Burnout for students of color can stem from added, unspoken cultural pressures', 'Art degrees are pointless', 'All students feel the same pressures'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s emotional state in her first year?', options: ['Confident and settled', 'Lost and doubting her choices', 'Excited and thriving', 'Indifferent'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about how white reporters are perceived versus reporters of color?' }
+    ]
+  },
+  'T5-V6': {
+    topic: 'Academic Life and Student Struggles',
+    text: `I realised something wasn't right — I needed a proper break. At the same time, I received a warning about my blood pressure, which was dangerously high for someone my age and family medical history, so my doctor strongly recommended a complete lifestyle change and removing every shred of stress from my life.
+When I stepped away from my business and switched off emails, I didn't know what to do with myself. Who was I without work? At first, I just slept — I was so exhausted that over the autumn of 2018 I had been falling asleep sitting up, in the middle of the work day, which I had tried to combat with increasing amounts of caffeine, creating a vicious cycle of sleeplessness and exhaustion. Being tired had been my experience of life for so long I couldn't remember a time when I wasn't constantly exhausted — it had become my normal.Four months later, I sold my share of the business to my co-founder after realising this would take much longer and I needed to change everything in my life, even if I didn't know what that would look like. Fast forward to December 2019, and I'm back working — not at the same pace or intensity as I was before, but I have regained my passion for behavioural science and my ability to think.`,
+    questions: [
+      { type: 'mcq', q: 'What did the narrator do when she first stepped away from work?', options: ['Traveled extensively', 'Mostly just slept, exhausted', 'Started a new job immediately', 'Took up a hobby'], answer: 1 },
+      { type: 'mcq', q: 'What did the narrator use to combat her exhaustion, creating a vicious cycle?', options: ['Exercise', 'Increasing amounts of caffeine', 'Sleeping pills', 'Therapy'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Business owners never get tired', 'Recognizing burnout and stepping back can lead to renewed passion', 'Caffeine is a good long-term solution', 'Selling a business always feels good'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about how normalized her exhaustion had become?', options: ['She barely noticed it; it felt normal', 'She was always aware of it', 'She sought help immediately', 'She never felt tired'], answer: 0 },
+      { type: 'open', q: 'What assumption does the narrator make about what it means to "start over" without knowing what her life will look like?' }
+    ]
+  },
+  'T6-V1': {
+    topic: 'Art, Music and Creativity',
+    text: `I went to visit an older woman in the ICU who had a stroke. She was minimally responsive and unable to focus or answer questions. I was asked to provide some music for orientation. Her daughter was sitting in the corner of the room and looking at her phone. After telling her why I was there, I started to bring some music in. Initially I was just giving some soft soundscape on the guitar, just to set the tone. I noticed that the patient’s heart rate gradually increased, perhaps showing an awareness of the sound stimuli. I continued, following her body-rhythms with the tempo and feel of the music. After a bit, I merged into a ‘lullaby’ version of ‘Edelweiss’ (from The Sound of Music). As I started singing, her daughter got up from her chair, went to the bed and took her hand… and started to cry.`,
+    questions: [
+      { type: 'mcq', q: 'What instrument did the narrator play in the ICU?', options: ['Piano', 'Guitar', 'Violin', 'Flute'], answer: 1 },
+      { type: 'mcq', q: 'What song did the narrator merge into as a "lullaby" version?', options: ['Amazing Grace', 'Edelweiss', 'Silent Night', 'Somewhere Over the Rainbow'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Music therapy has no real effect', 'Music can create emotional connection even with unresponsive patients and their families', 'ICU visits are usually silent', 'Daughters rarely visit patients'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the daughter\'s emotional state before the music started?', options: ['She was already deeply engaged', 'She was distracted/disconnected, absorbed in her phone', 'She was crying already', 'She was asleep'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why the daughter reacted the way she did to the song?' }
+    ]
+  },
+  'T6-V2': {
+    topic: 'Art, Music and Creativity',
+    text: `When this topic first came to my attention as I sat behind the steering wheel in my driveway years ago, a memory from college popped into my head, as complete and vivid as it was on the day it happened. The incident took place during a rainy spring afternoon on a grey Northwest day. I was standing next to a cluttered desk in a music professor’s office, puzzling over a jazz chart propped on a listing black music stand. I had found some extra time in my class schedule that semester and had decided to fill it with something “fun” for once. So, after more than a dozen years of playing clarinet in a variety of symphonic bands and orchestras, I thought I would try something different and take private lessons on the saxophone. I’d played alto sax in high school jazz band (although never as an improv soloist), and I thought this would be an opportunity to take a musical side interest to a deeper level.`,
+    questions: [
+      { type: 'mcq', q: 'What instrument did the narrator play for over a dozen years before switching?', options: ['Saxophone', 'Clarinet', 'Trumpet', 'Piano'], answer: 1 },
+      { type: 'mcq', q: 'What new instrument did the narrator decide to take private lessons on?', options: ['Violin', 'Saxophone', 'Drums', 'Guitar'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Music lessons are a waste of time', 'Trying something new musically, just for enjoyment, can be meaningful', 'Jazz is the only valuable genre', 'Private lessons are always disappointing'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the narrator\'s motivation for taking up saxophone?', options: ['Career advancement', 'Personal enjoyment and curiosity, "just for fun"', 'Peer pressure', 'A school requirement'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why this memory remained so vivid years later?' }
+    ]
+  },
+  'T6-V6': {
+    topic: 'Art, Music and Creativity',
+    text: `I went to visit an older woman in the ICU who had had a stroke. She was minimally responsive and unable to focus or answer questions. I was asked to provide some music for orientation. Her daughter was sitting in the corner of the room, looking at her phone. After telling her why I was there, I started to bring some music in. Initially I was just playing some soft soundscape on the guitar, just to set the tone. I noticed the patient's heart rate gradually increase, perhaps showing an awareness of the sound stimuli. I continued, following her body rhythms with the tempo and feel of the music. After a bit, I merged into a 'lullaby' version of 'Edelweiss' (from The Sound of Music). As I started singing, her daughter got up from her chair, went to the bed, took her hand — and started to cry.`,
+    questions: [
+      { type: 'mcq', q: 'What did the narrator notice about the patient\'s heart rate?', options: ['It decreased', 'It gradually increased in response to the music', 'It stayed the same', 'It wasn\'t measurable'], answer: 1 },
+      { type: 'mcq', q: 'What action did the daughter take after the singing began?', options: ['She left the room', 'She got up, took her mother\'s hand, and cried', 'She called a nurse', 'She started recording'], answer: 1 },
+      { type: 'mcq', q: 'What is the main idea of the passage?', options: ['Music has no effect on ICU patients', 'Music can reach patients and families emotionally even in difficult moments', 'Guitar isn\'t suited for hospitals', 'Daughters are usually indifferent'], answer: 1 },
+      { type: 'mcq', q: 'What can you infer about the significance of the song choice?', options: ['It was random', 'It was meaningful/personal, given the emotional reaction it caused', 'It upset the daughter', 'It had no impact'], answer: 1 },
+      { type: 'open', q: 'What assumption does the narrator make about why playing music mattered in this specific moment?' }
+    ]
+  },
 };
 
 // ═══════════════════════════════════════════════════════════
